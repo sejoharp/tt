@@ -1,0 +1,19 @@
+one:
+  user: testuser
+  start: <%= DateTime.new(2000,1,1,8) %>
+  stop: <%= DateTime.new(2000,1,1,16) %>
+
+two:
+  user: testuser
+  start: <%= 1.days.ago.to_datetime - (2/24) %>
+  stop: <%= 1.days.ago.to_datetime  - (1/24) %>
+
+three:
+  user: testuser
+  start: <%= 2.minute.ago %>
+  stop: <%= 1.minute.ago %>
+
+four:
+  user: seconduser
+  start: <%= 2.minute.ago %>
+  stop: <%= 1.minute.ago %>
