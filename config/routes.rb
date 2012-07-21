@@ -59,6 +59,7 @@ Tt::Application.routes.draw do
   get "logout" => "sessions#destroy", :as => "logout"
   get "login" => "sessions#new", :as => "login"
   get "signup" => "users#new", :as => "signup"
+  post 'intervals/start' => 'intervals#start'
   root :to => "intervals#index"
   resources :users
   resources :sessions

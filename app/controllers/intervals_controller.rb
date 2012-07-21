@@ -29,7 +29,7 @@ class IntervalsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @interval }
+      format.json { render json: @interval } 
     end
   end
 
@@ -89,5 +89,10 @@ class IntervalsController < ApplicationController
         format.json { render json: @interval.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def start
+    Interval.start_interval(current_user) if Interval.get_open_intervals(current_user).size == 0
+    redirect_to intervals_url
   end
 end

@@ -48,6 +48,20 @@ describe IntervalsController do
     end
   end
 
+  describe "POST start" do
+    it "creates a new interval which starts now" do
+      expect {
+        post :start, {}, valid_session
+      }.to change(Interval, :count).by(1)
+    end
+    it "does not create a new interval due to an open interval" do
+      Interval.start_interval(users(:testuser))
+      expect {
+        post :start, {}, valid_session
+      }.to change(Interval, :count).by(0)
+    end
+  end
+
   describe "GET new" do
     it "assigns a new interval as @interval" do
       get :new, {}, valid_session

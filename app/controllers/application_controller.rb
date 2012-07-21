@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
 
 	def authorize
     redirect_to login_url, alert: "Not authorized" if current_user.nil?
-  end
+	end
 
   def access_allowed?(interval)
   	current_user == interval.user

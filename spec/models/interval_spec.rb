@@ -27,10 +27,10 @@ describe Interval do
 	it 'all intervals from one day' do
 		user = User.new(:name=>'user', :password=>'pw')
 		start = DateTime.new(2012,7,2)
-		Interval.new(:start => DateTime.new(2012,7,1), :user=> user).save
-		Interval.new(:start => start, :user=> user).save
-		Interval.new(:start => start, :user=> user).save
-		Interval.new(:start => DateTime.new(2012,7,3), :user=> user).save
+		Interval.create!(:start => DateTime.new(2012,7,1), :user=> user)
+		Interval.create!(:start => start, :user=> user)
+		Interval.create!(:start => start, :user=> user)
+		Interval.create!(:start => DateTime.new(2012,7,3), :user=> user)
 		intervals = Interval.all_intervals_in_range(Date.new(2012,7,2)..Date.new(2012,7,3),user)
 		intervals.size.should eq 2
 		intervals.first.start.should eq start
@@ -56,8 +56,18 @@ describe Interval do
 	it 'all_intervals delivers 2 entries' do
 		user = User.new(:name=>'user', :password=>'pw')
 		start = DateTime.new(2012,7,2)
-		Interval.new(:start => start, :user=> user).save
-		Interval.new(:start => start, :user=> user).save
+		Interval.create!(:start => start, :user=> user)
+		Interval.create!(:start => start, :user=> user)
 		Interval.all_intervals(user).size.should eq 2
+	end
+	it 'it finds no open intervals' do
+		Interval.get_open_intervals(users(:testuser)).size.should eq 0
+	end
+
+	it 'it finds 2 open intervals' do
+		user = users(:testuser)
+		Interval.create!(:start => DateTime.new(2012,7,1), :user=> user)
+		Interval.create!(:start => DateTime.now, :user=> user)
+		Interval.get_open_intervals(user).size.should eq 2
 	end
 end

@@ -31,6 +31,10 @@ group :development, :test do
   gem 'capybara'
   gem 'database_cleaner'
   gem 'cucumber-rails', :require => false
+  gem "ZenTest", "~> 4.4.2"
+  gem "autotest-rails", "~> 4.1.0"
+  gem 'autotest-growl'
+  gem 'autotest-fsevent'
 end
 
 # To use ActiveModel has_secure_password
