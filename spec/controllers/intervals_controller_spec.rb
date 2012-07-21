@@ -60,6 +60,10 @@ describe IntervalsController do
         put :stop, {}, valid_session
       }.to change(Interval, :count).by(0)
     end
+    it 'should redirect to intervals index' do
+      put :stop, {}, valid_session
+      response.should redirect_to(intervals_url)
+    end
   end
 
   describe "POST start" do
@@ -73,6 +77,10 @@ describe IntervalsController do
       expect {
         post :start, {}, valid_session
       }.to change(Interval, :count).by(0)
+    end
+    it 'should redirect to intervals index' do
+      post :start, {}, valid_session
+      response.should redirect_to(intervals_url)
     end
   end
 

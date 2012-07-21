@@ -92,12 +92,26 @@ class IntervalsController < ApplicationController
   end
 
   def start
-    Interval.start_interval(current_user)
-    redirect_to intervals_url
+    respond_to do |format|
+      if Interval.start_interval(current_user)
+        format.html { redirect_to intervals_url, notice: 'started working.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to intervals_url, notice: 'you are still working.' }
+        format.json { head :no_content }
+      end
+    end
   end
 
   def stop
-    Interval.stop_interval(current_user)
-    redirect_to intervals_url
+    respond_to do |format|
+      if Interval.stop_interval(current_user)
+        format.html { redirect_to intervals_url, notice: 'stopped working.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to intervals_url, notice: 'you are not working.' }
+        format.json { head :no_content }
+      end
+    end
   end
 end
