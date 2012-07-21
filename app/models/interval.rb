@@ -13,7 +13,15 @@ class Interval < ActiveRecord::Base
   end
 
   def self.start_interval(user)
-  	Interval.create!(:start => DateTime.now, :user=>user)
+  	Interval.create!(:start => DateTime.now, :user=>user) if get_open_intervals(user).size == 0
+  end
+
+  def self.stop_interval(user)
+    open_interval = Interval.get_open_intervals(user).last
+    if open_interval
+      open_interval.stop = DateTime.now
+      open_interval.save
+    end
   end
 
   def self.get_open_intervals(user)

@@ -48,6 +48,20 @@ describe IntervalsController do
     end
   end
 
+  describe "PUT stop" do
+    it "fills the latest open interval with a stop dateteime" do
+      Interval.start_interval(users(:testuser))
+      Interval.where(:user_id => users(:testuser).id).last.stop.should be nil
+      put :stop, {}, valid_session
+      Interval.where(:user_id => users(:testuser).id).last.stop.should_not be nil
+    end
+    it "does not do anything because all intervals are closed" do
+      expect {
+        put :stop, {}, valid_session
+      }.to change(Interval, :count).by(0)
+    end
+  end
+
   describe "POST start" do
     it "creates a new interval which starts now" do
       expect {

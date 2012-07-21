@@ -92,7 +92,12 @@ class IntervalsController < ApplicationController
   end
 
   def start
-    Interval.start_interval(current_user) if Interval.get_open_intervals(current_user).size == 0
+    Interval.start_interval(current_user)
+    redirect_to intervals_url
+  end
+
+  def stop
+    Interval.stop_interval(current_user)
     redirect_to intervals_url
   end
 end
