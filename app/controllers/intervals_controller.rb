@@ -11,6 +11,17 @@ class IntervalsController < ApplicationController
     end
   end
 
+  # GET /intervals/today
+  # GET /intervals/today.json
+  def today
+    @intervals = Interval.all_intervals_in_range(Date.today..Date.today + 1,current_user)
+    @is_working = Interval.open? current_user
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @intervals,is_working: @is_working }
+    end
+  end
+
   # GET /intervals/1
   # GET /intervals/1.json
   def show
@@ -93,11 +104,11 @@ class IntervalsController < ApplicationController
 
   def start
     respond_to do |format|
-      if Interval.start_interval(current_user)
-        format.html { redirect_to intervals_url, notice: 'started working.' }
+      if not Interval.open?(current_user) and Interval.start_interval(current_user)
+        format.html { redirect_to intervals_today_url, notice: 'started working.' }
         format.json { head :no_content }
       else
-        format.html { redirect_to intervals_url, notice: 'you are still working.' }
+        format.html { redirect_to intervals_today_url, notice: 'you are still working.' }
         format.json { head :no_content }
       end
     end
@@ -106,10 +117,10 @@ class IntervalsController < ApplicationController
   def stop
     respond_to do |format|
       if Interval.stop_interval(current_user)
-        format.html { redirect_to intervals_url, notice: 'stopped working.' }
+        format.html { redirect_to intervals_today_url, notice: 'stopped working.' }
         format.json { head :no_content }
       else
-        format.html { redirect_to intervals_url, notice: 'you are not working.' }
+        format.html { redirect_to intervals_today_url, notice: 'you are not working.' }
         format.json { head :no_content }
       end
     end

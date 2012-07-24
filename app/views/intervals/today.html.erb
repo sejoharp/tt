@@ -1,0 +1,9 @@
+<%- model_class = Interval.new.class -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
+</div>
+
+<%= render :partial => 'list' %>
+
+<%= link_to t('.start', :default => t("helpers.links.start")), intervals_start_path, :class => 'btn btn-primary' %>
+<%= link_to t('.stop', :default => t("helpers.links.stop")), intervals_stop_path, :class => 'btn btn-primary' %>

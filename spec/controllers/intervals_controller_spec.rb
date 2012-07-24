@@ -41,6 +41,22 @@ describe IntervalsController do
     end
   end
 
+  describe "GET today" do
+    it "should redirect to interval#today" do
+      get :today, {}, valid_session
+      assigns(:intervals).should eq([intervals(:three)])
+    end
+    it "testuser should not work right now" do
+      get :today, {}, valid_session
+      assigns(:is_working).should eq false
+    end
+    it "testuser should work right now" do
+      post :start, {}, valid_session
+      get :today, {}, valid_session
+      assigns(:is_working).should eq true
+    end
+  end
+
   describe "GET show" do
     it "assigns the requested interval as @interval" do
       get :show, {:id => intervals(:one).to_param}, valid_session
@@ -60,9 +76,9 @@ describe IntervalsController do
         put :stop, {}, valid_session
       }.to change(Interval, :count).by(0)
     end
-    it 'should redirect to intervals index' do
+    it 'should redirect to intervals today' do
       put :stop, {}, valid_session
-      response.should redirect_to(intervals_url)
+      response.should redirect_to(intervals_today_url)
     end
   end
 
@@ -80,7 +96,7 @@ describe IntervalsController do
     end
     it 'should redirect to intervals index' do
       post :start, {}, valid_session
-      response.should redirect_to(intervals_url)
+      response.should redirect_to(intervals_today_url)
     end
   end
 
@@ -152,7 +168,7 @@ describe IntervalsController do
       end
 
       it "redirects to the interval" do
-        put :update, {:id => intervals(:one).to_param, :interval => valid_attributes}, valid_session
+        put :update, {:id => intervals(:one).to_param, :interval => {:stop => DateTime.now}}, valid_session
         response.should redirect_to(intervals(:one))
       end
     end

@@ -15,5 +15,5 @@ three:
 
 four:
   user: seconduser
-  start: <%= 2.minute.ago %>
-  stop: <%= 1.minute.ago %>
+  start: <%= 2.hour.ago %>
+  stop: <%= 1.hour.ago %>

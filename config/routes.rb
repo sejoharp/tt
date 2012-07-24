@@ -61,6 +61,7 @@ Tt::Application.routes.draw do
   get "signup" => "users#new", :as => "signup"
   post 'intervals/start' => 'intervals#start'
   put 'intervals/stop' => 'intervals#stop'
+  get 'intervals/today' => 'intervals#today'
   root :to => "intervals#index"
   resources :users
   resources :sessions

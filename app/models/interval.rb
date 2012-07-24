@@ -3,6 +3,7 @@ class Interval < ActiveRecord::Base
   attr_accessible :start, :stop, :user
   validates_presence_of :user
   validates_presence_of :start
+  validate :stop_has_to_be_greater_than_or_equal_to_start, :if => '!stop.nil?'
 
   def self.all_intervals_in_range(range,user)
   	Interval.where(:start => range, :user_id=>user).order(:start)
@@ -13,7 +14,7 @@ class Interval < ActiveRecord::Base
   end
 
   def self.start_interval(user)
-    if get_open_intervals(user).size == 0
+    if not open?(user)
       Interval.new(:start => DateTime.now, :user=>user).save
     else
       false
@@ -34,11 +35,21 @@ class Interval < ActiveRecord::Base
     Interval.where(:user_id=>user, :stop=>nil).order(:start)
   end
 
+  def self.open?(user)
+    Interval.where(:user_id=>user, :stop=>nil).order(:start).count > 0
+  end
+
   def diff
   	if stop
   		stop.to_f - start.to_f
   	else
   		DateTime.now.to_f - start.to_f
   	end
+  end
+
+  def stop_has_to_be_greater_than_or_equal_to_start
+    if stop and stop.to_f < start.to_f
+      errors.add(:stop, "has to be greater or equal to start")
+    end
   end
 end

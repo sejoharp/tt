@@ -36,6 +36,10 @@ describe Interval do
 		intervals.first.start.should eq start
 		intervals.last.start.should eq start
 	end
+		it 'all intervals from today' do
+		 intervals = Interval.all_intervals_in_range Date.today..(Date.today + 1),users(:testuser)
+		 intervals.should eq([intervals(:three)])
+	end
 	it 'all_intervals_in_range return empty array if no data is available' do
 		range = Date.new(2012,7,2)..Date.new(2012,7,3)
 		user = User.new(:name=>'user', :password=>'pw')
@@ -63,11 +67,21 @@ describe Interval do
 	it 'it finds no open intervals' do
 		Interval.get_open_intervals(users(:testuser)).size.should eq 0
 	end
-
 	it 'it finds 2 open intervals' do
 		user = users(:testuser)
 		Interval.create!(:start => DateTime.new(2012,7,1), :user=> user)
 		Interval.create!(:start => DateTime.now, :user=> user)
 		Interval.get_open_intervals(user).size.should eq 2
+	end
+	it 'it should not save because start is greater than stop' do
+		Interval.new(:start => DateTime.new(2012,7,1),:stop=> DateTime.new(2012,6,30), :user=> users(:testuser)).save.should eq false
+	end
+	it 'it should not find an open interval' do
+		Interval.open?(users(:testuser)).should eq false
+	end
+	it 'it should find an open interval' do
+		user = users(:testuser)
+		Interval.create!(:start => DateTime.new(2012,7,1), :user=> user)
+		Interval.open?(user).should eq true
 	end
 end
