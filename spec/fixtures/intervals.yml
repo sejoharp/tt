@@ -10,8 +10,8 @@ two:
 
 three:
   user: testuser
-  start: <%= 2.minute.ago %>
-  stop: <%= 1.minute.ago %>
+  start: <%= 2.second.ago %>
+  stop: <%= 1.second.ago %>
 
 four:
   user: seconduser

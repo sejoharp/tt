@@ -42,7 +42,7 @@ describe IntervalsController do
   end
 
   describe "GET today" do
-    it "should redirect to interval#today" do
+    it "should display one interval" do
       get :today, {}, valid_session
       assigns(:intervals).should eq([intervals(:three)])
     end

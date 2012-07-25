@@ -5,5 +5,8 @@
 
 <%= render :partial => 'list' %>
 
-<%= link_to t('.start', :default => t("helpers.links.start")), intervals_start_path, :class => 'btn btn-primary' %>
-<%= link_to t('.stop', :default => t("helpers.links.stop")), intervals_stop_path, :class => 'btn btn-primary' %>
+<% if @is_working %>
+	<%= link_to 'stop working', intervals_stop_path, :class => 'btn btn-primary' %>
+<% else %>
+	<%= link_to 'start working', intervals_start_path, :class => 'btn btn-primary' %>
+<% end %>
