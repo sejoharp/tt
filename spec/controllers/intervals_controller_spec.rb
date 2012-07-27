@@ -80,6 +80,15 @@ describe IntervalsController do
       put :stop, {}, valid_session
       response.should redirect_to(intervals_today_url)
     end
+    it "returns a confirmation notice" do
+      Interval.start_interval(users(:testuser))
+      put :stop, {}, valid_session
+      flash[:notice].should eq 'stopped working.'
+    end
+    it "returns a error notice, because user is not working" do
+      put :stop, {}, valid_session
+      flash[:notice].should eq 'you are not working.'
+    end
   end
 
   describe "POST start" do
@@ -97,6 +106,23 @@ describe IntervalsController do
     it 'should redirect to intervals index' do
       post :start, {}, valid_session
       response.should redirect_to(intervals_today_url)
+    end
+    it "returns a confirmation notice" do
+      post :start, {}, valid_session
+      flash[:notice].should eq 'started working.'
+    end
+    it "returns a error notice, because user is already working" do
+      post :start, {}, valid_session
+      post :start, {}, valid_session
+      flash[:notice].should eq 'you are already working.'
+    end
+    it "returns a error notice, because user is not logged in" do
+      post :start, {}
+      flash[:alert].should eq 'Not authorized'
+    end
+    it "redirects to login page, because user is not logged in" do
+      post :start, {}
+      response.should redirect_to(login_url)
     end
   end
 
@@ -132,6 +158,12 @@ describe IntervalsController do
         post :create, {:interval => valid_attributes}, valid_session
         response.should redirect_to(Interval.last)
       end
+
+      it "returns a notice" do
+        post :create, {:interval => valid_attributes}, valid_session
+        flash[:notice].should eq 'Interval was successfully created.'
+      end
+      
     end
 
     describe "with invalid params" do
@@ -147,6 +179,10 @@ describe IntervalsController do
         Interval.any_instance.stub(:save).and_return(false)
         post :create, {:interval => {}}, valid_session
         response.should render_template("new")
+      end
+      it "redirects to login page, because user is not logged in" do
+        post :create, {:interval => {}}
+        response.should redirect_to(login_url)
       end
     end
   end
@@ -171,6 +207,11 @@ describe IntervalsController do
         put :update, {:id => intervals(:one).to_param, :interval => {:stop => DateTime.now}}, valid_session
         response.should redirect_to(intervals(:one))
       end
+      it "returns a notice" do
+        put :update, {:id => intervals(:one).to_param, :interval => {:stop => DateTime.now}}, valid_session
+        flash[:notice].should eq 'Interval was successfully updated.'
+      end
+      
     end
 
     describe "with invalid params" do
@@ -200,6 +241,10 @@ describe IntervalsController do
     it "redirects to the intervals list" do
       delete :destroy, {:id => intervals(:one).to_param}, valid_session
       response.should redirect_to(intervals_today_url)
+    end
+
+    it "returns a notice" do
+      delete :destroy, {:id => intervals(:one).to_param}, valid_session
       flash[:notice].should eq 'Interval deleted.'
     end
   end

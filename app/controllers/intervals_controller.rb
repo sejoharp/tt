@@ -108,7 +108,7 @@ class IntervalsController < ApplicationController
         format.html { redirect_to intervals_today_url, notice: 'started working.' }
         format.json { head :no_content }
       else
-        format.html { redirect_to intervals_today_url, notice: 'you are still working.' }
+        format.html { redirect_to intervals_today_url, notice: 'you are already working.' }
         format.json { head :no_content }
       end
     end

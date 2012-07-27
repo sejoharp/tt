@@ -14,4 +14,3 @@ This is a timetracker written in ruby on rails.
 # used frameworks
 * ruby on rails
 * twitter bootstrap
-

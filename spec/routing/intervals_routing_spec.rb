@@ -31,5 +31,20 @@ describe IntervalsController do
       delete("/intervals/1").should route_to("intervals#destroy", :id => "1")
     end
 
+    it "routes to #today" do
+      get("/intervals/today").should route_to("intervals#today")
+    end
+
+    it "routes to #start" do
+      post("/intervals/start").should route_to("intervals#start")
+    end
+
+    it "routes to #stop" do
+      put("/intervals/stop").should route_to("intervals#stop")
+    end
+
+    it "routes to root" do
+      get("/").should route_to("intervals#today")
+    end
   end
 end
