@@ -62,7 +62,7 @@ Tt::Application.routes.draw do
   post 'intervals/start' => 'intervals#start'
   put 'intervals/stop' => 'intervals#stop'
   get 'intervals/today' => 'intervals#today'
-  root :to => "intervals#index"
+  root :to => "intervals#today"
   resources :users
   resources :sessions
   resources :intervals  

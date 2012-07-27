@@ -93,7 +93,7 @@ class IntervalsController < ApplicationController
 
     respond_to do |format|
       if access_allowed?(@interval)
-        format.html { redirect_to intervals_url }
+        format.html { redirect_to intervals_today_url, notice: 'Interval deleted.' }
         format.json { head :no_content }
       else
         format.html { redirect_to intervals_url, alert: "deleting interval denied." }

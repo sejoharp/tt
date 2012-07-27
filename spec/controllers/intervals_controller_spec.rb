@@ -199,7 +199,8 @@ describe IntervalsController do
 
     it "redirects to the intervals list" do
       delete :destroy, {:id => intervals(:one).to_param}, valid_session
-      response.should redirect_to(intervals_url)
+      response.should redirect_to(intervals_today_url)
+      flash[:notice].should eq 'Interval deleted.'
     end
   end
 

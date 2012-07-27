@@ -25,4 +25,13 @@ describe "intervals/today" do
     rendered.should =~ /stop working/
     rendered.should_not =~ /start working/
   end
+	it "displays a message that no intervals are available." do
+    assign(:intervals, [])
+    assign(:is_working, true)
+
+    render
+
+    rendered.should =~ /no intervals available/
+    rendered.should =~ /todays intervals/
+  end
 end
