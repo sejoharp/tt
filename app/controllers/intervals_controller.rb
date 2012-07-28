@@ -28,8 +28,13 @@ class IntervalsController < ApplicationController
     @interval = Interval.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @interval }
+      if @interval.access_allowed?(current_user)
+        format.html # show.html.erb
+        format.json { render json: @interval }
+      else
+        format.html { redirect_to intervals_today_url, alert: 'showing this interval is not allowed'}
+        format.json { head :no_content }        
+      end
     end
   end
 
@@ -64,7 +69,7 @@ class IntervalsController < ApplicationController
   # GET /intervals/1/edit
   def edit
     interval = Interval.find(params[:id])
-    @interval = access_allowed?(interval) ? interval : nil
+    @interval = interval.access_allowed?(current_user) ? interval : nil
   end
 
   # PUT /intervals/1
@@ -73,11 +78,11 @@ class IntervalsController < ApplicationController
     @interval = Interval.find(params[:id])
 
     respond_to do |format|
-      if access_allowed?(@interval) and @interval.update_attributes(params[:interval])
+      if @interval.access_allowed?(current_user) and @interval.update_attributes(params[:interval])
         format.html { redirect_to @interval, notice: 'Interval was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: "edit" }
+        format.html { render action: "edit"}
         format.json { render json: @interval.errors, status: :unprocessable_entity }
       end
     end
@@ -87,12 +92,12 @@ class IntervalsController < ApplicationController
   # DELETE /intervals/1.json
   def destroy
     @interval = Interval.find(params[:id])
-    if access_allowed?(@interval)
+    if @interval.access_allowed?(current_user)
       @interval.destroy
     end
 
     respond_to do |format|
-      if access_allowed?(@interval)
+      if @interval.access_allowed?(current_user)
         format.html { redirect_to intervals_today_url, notice: 'Interval deleted.' }
         format.json { head :no_content }
       else

@@ -47,6 +47,10 @@ class Interval < ActiveRecord::Base
   	end
   end
 
+  def access_allowed?(user)
+    self.user == user
+  end
+
   def stop_has_to_be_greater_than_or_equal_to_start
     if stop and stop.to_f < start.to_f
       errors.add(:stop, "has to be greater or equal to start")

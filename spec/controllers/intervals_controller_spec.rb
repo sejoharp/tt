@@ -42,15 +42,15 @@ describe IntervalsController do
   end
 
   describe "GET today" do
-    it "should display one interval" do
+    it "displays one interval" do
       get :today, {}, valid_session
       assigns(:intervals).should eq([intervals(:three)])
     end
-    it "testuser should not work right now" do
+    it "testuser does not work right now" do
       get :today, {}, valid_session
       assigns(:is_working).should eq false
     end
-    it "testuser should work right now" do
+    it "testuser works right now" do
       post :start, {}, valid_session
       get :today, {}, valid_session
       assigns(:is_working).should eq true
@@ -61,6 +61,14 @@ describe IntervalsController do
     it "assigns the requested interval as @interval" do
       get :show, {:id => intervals(:one).to_param}, valid_session
       assigns(:interval).should eq(intervals(:one))
+    end
+    it "redirect to today because interval is from an other user" do
+      get :show, {:id => intervals(:four).to_param}, valid_session
+      response.should redirect_to intervals_today_url
+    end
+    it "returns an error message because interval is from an other user" do
+      get :show, {:id => intervals(:four).to_param}, valid_session
+      flash[:alert].should eq 'showing this interval is not allowed'
     end
   end
 
@@ -228,6 +236,10 @@ describe IntervalsController do
         put :update, {:id => intervals(:one).to_param, :interval => {}}, valid_session
         response.should render_template("edit")
       end
+      it "returns no message because user is not allowed to access" do
+        put :update, {:id => intervals(:four).to_param, :interval => valid_attributes}, valid_session
+        flash[:notice].should_not eq 'Interval was successfully updated.'
+      end
     end
   end
 
@@ -246,6 +258,16 @@ describe IntervalsController do
     it "returns a notice" do
       delete :destroy, {:id => intervals(:one).to_param}, valid_session
       flash[:notice].should eq 'Interval deleted.'
+    end
+
+    it "returns a error message because user is not allowed to access" do
+      delete :destroy, {:id => intervals(:four).to_param}, valid_session
+      flash[:alert].should eq 'deleting interval denied.'
+    end
+
+    it "redirects to index because user is not allowed to access" do
+      delete :destroy, {:id => intervals(:four).to_param}, valid_session
+      response.should redirect_to(intervals_url)
     end
   end
 

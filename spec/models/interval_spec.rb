@@ -84,4 +84,14 @@ describe Interval do
 		Interval.create!(:start => DateTime.new(2012,7,1), :user=> user)
 		Interval.open?(user).should eq true
 	end
+	it 'access denied because of the false user' do
+		user = users(:testuser)
+		interval = Interval.create(:start => DateTime.new(2012,7,1), :user=> user)
+		interval.access_allowed?(users(:seconduser)).should eq false
+	end
+	it 'access allowed' do
+		user = User.create(:name=>'user', :password=>'pw')
+		interval = Interval.create(:start => DateTime.new(2012,7,1), :user=> user)
+		interval.access_allowed?(user).should eq true
+	end
 end
