@@ -12,15 +12,12 @@ describe Interval do
 	  	interval.save.should eq false
 	end
 	it 'saved successfully' do
-	  	interval = Interval.new
-	  	interval.start = DateTime.now
-	  	interval.stop = DateTime.now
+	  	interval = Interval.new(:start=>DateTime.now, :stop=>DateTime.now)
 	  	interval.user = User.new(:name=>'user', :password=>'pw')
 	  	interval.save.should eq true
 	end	
 	it 'saved successfully with minimal data' do
-	  	interval = Interval.new
-	  	interval.start = DateTime.now
+	  	interval = Interval.new(:start =>DateTime.now)
 	  	interval.user = User.new(:name=>'user', :password=>'pw')
 	  	interval.save.should eq true
 	end
@@ -86,12 +83,12 @@ describe Interval do
 	end
 	it 'access denied because of the false user' do
 		user = users(:testuser)
-		interval = Interval.create(:start => DateTime.new(2012,7,1), :user=> user)
+		interval = Interval.new(:start => DateTime.new(2012,7,1), :user=> user)
 		interval.access_allowed?(users(:seconduser)).should eq false
 	end
 	it 'access allowed' do
-		user = User.create(:name=>'user', :password=>'pw')
-		interval = Interval.create(:start => DateTime.new(2012,7,1), :user=> user)
+		user = users(:testuser)
+		interval = Interval.new(:start => DateTime.new(2012,7,1), :user=> user)
 		interval.access_allowed?(user).should eq true
 	end
 end

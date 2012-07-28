@@ -1,7 +1,6 @@
 class IntervalsController < ApplicationController
   before_filter :authorize
-  # GET /intervals
-  # GET /intervals.json
+
   def index
     @intervals = Interval.all_intervals(current_user)
 
@@ -11,8 +10,6 @@ class IntervalsController < ApplicationController
     end
   end
 
-  # GET /intervals/today
-  # GET /intervals/today.json
   def today
     @intervals = Interval.all_intervals_in_range(Date.today..Date.today + 1,current_user)
     @is_working = Interval.open? current_user
@@ -22,8 +19,6 @@ class IntervalsController < ApplicationController
     end
   end
 
-  # GET /intervals/1
-  # GET /intervals/1.json
   def show
     @interval = Interval.find(params[:id])
 
@@ -38,8 +33,6 @@ class IntervalsController < ApplicationController
     end
   end
 
-  # GET /intervals/new
-  # GET /intervals/new.json
   def new
     @interval = Interval.new
 
@@ -49,8 +42,6 @@ class IntervalsController < ApplicationController
     end
   end
 
-  # POST /intervals
-  # POST /intervals.json
   def create
     @interval = Interval.new(params[:interval])
     @interval.user = current_user
@@ -66,14 +57,11 @@ class IntervalsController < ApplicationController
     end
   end
 
-  # GET /intervals/1/edit
   def edit
     interval = Interval.find(params[:id])
     @interval = interval.access_allowed?(current_user) ? interval : nil
   end
 
-  # PUT /intervals/1
-  # PUT /intervals/1.json
   def update
     @interval = Interval.find(params[:id])
 
@@ -88,8 +76,6 @@ class IntervalsController < ApplicationController
     end
   end
 
-  # DELETE /intervals/1
-  # DELETE /intervals/1.json
   def destroy
     @interval = Interval.find(params[:id])
     if @interval.access_allowed?(current_user)
