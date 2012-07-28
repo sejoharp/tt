@@ -36,7 +36,7 @@ class Interval < ActiveRecord::Base
   end
 
   def self.open?(user)
-    Interval.where(:user_id=>user, :stop=>nil).order(:start).count > 0
+    Interval.where(:user_id=>user, :stop=>nil).count > 0
   end
 
   def diff
@@ -55,5 +55,11 @@ class Interval < ActiveRecord::Base
     if stop and stop.to_f < start.to_f
       errors.add(:stop, "has to be greater or equal to start")
     end
+  end
+
+  def self.sum_diffs(intervals)
+    sum = 0
+    intervals.each {|interval| sum += interval.diff }
+    sum
   end
 end

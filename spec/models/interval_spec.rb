@@ -91,4 +91,12 @@ describe Interval do
 		interval = Interval.new(:start => DateTime.new(2012,7,1), :user=> user)
 		interval.access_allowed?(user).should eq true
 	end
+	it 'diff from an 2 intervals equals 7200 secs' do
+		interval1 = Interval.new( :start => DateTime.new(2012,7,17,10,0), :stop => DateTime.new(2012,7,17,11,0))
+		interval2 = Interval.new( :start => DateTime.new(2012,7,17,10,0), :stop => DateTime.new(2012,7,17,11,0))
+		Interval.sum_diffs([interval1,interval2]).should eq 7200
+	end
+	it 'diff from an 0 intervals equals 0 secs' do
+		Interval.sum_diffs([]).should eq 0
+	end
 end

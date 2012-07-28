@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120715144825) do
+ActiveRecord::Schema.define(:version => 20120728213706) do
 
   create_table "intervals", :force => true do |t|
     t.datetime "start"
@@ -29,6 +29,8 @@ ActiveRecord::Schema.define(:version => 20120715144825) do
     t.string   "password_salt"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.integer  "worktime"
+    t.integer  "overtime"
   end
 
 end

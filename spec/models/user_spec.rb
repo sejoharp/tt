@@ -1,39 +1,20 @@
 require 'spec_helper'
 
 describe User do
+  fixtures :users, :intervals
   it 'saving fails without a name' do
-  	user = User.new
-  	user.save.should eq false
+    User.new(:password=>'testpw',:worktime=>0).save.should eq false
   end
   it 'saving fails without a password' do
-  	user = User.new
-  	user.name = 'testuser2'
-  	user.save.should eq false
+    User.new(:name=>'testuser2',:worktime=>0).save.should eq false
   end
   it 'can be saved with user and pw' do
-  	user = User.new
-  	user.name = 'testuser2'
-  	user.password = 'testpw'  	
-  	user.save.should eq true
-  end
-  it 'can be saved with user and pw' do
-  	user = User.new
-  	user.name = 'testuser2'
-  	user.password = 'testpw'  	
-  	user.save.should eq true
+    User.new(:name=>'testuser2',:password=>'testpw',:worktime=>0).save.should eq true
   end
   it 'authentication works with the right pw' do
-  	user = User.new
-  	user.name = 'testuser2'
-  	user.password = 'testpw'
-  	user.save
-  	user.authenticate('testpw').should eq true
+    users(:testuser).authenticate('password').should eq true
   end
-  it ' authentication fails with the false pw' do
-  	user = User.new
-  	user.name = 'testuser2'
-  	user.password = 'testpw1'
-  	user.save
-  	user.authenticate('testpw').should eq false
+  it 'authentication fails with the false pw' do
+    users(:testuser).authenticate('falsepassword').should eq false
   end
 end
