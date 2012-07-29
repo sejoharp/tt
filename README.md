@@ -2,8 +2,8 @@
 This is a timetracker written in ruby on rails.
 
 # features
-* manage the day working time
-* use start and stop to track your working time
+* manage daily working time
+* use start- and stop-buttons to track your worked time
 * user authentication
 * stats for:
 	* overtime

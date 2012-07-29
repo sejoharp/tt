@@ -17,7 +17,18 @@
       <%= f.password_field :password_confirmation, :class => 'text_field' %>
     </div>
   </div>
-
+  <div class="control-group">
+    <%= f.label :worktime, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :worktime, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :overtime, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :overtime, :class => 'text_field' %>
+    </div>
+  </div>
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

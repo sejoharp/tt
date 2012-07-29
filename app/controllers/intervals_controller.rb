@@ -13,6 +13,11 @@ class IntervalsController < ApplicationController
   def today
     @intervals = Interval.all_intervals_in_range(Date.today..Date.today + 1,current_user)
     @is_working = Interval.open? current_user
+    @worktime = current_user.worktime
+    @overtime = current_user.overtime
+    @worked_time = Interval.sum_diffs(@intervals)
+    @time_to_work = @worktime - @worked_time
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @intervals,is_working: @is_working }
@@ -27,7 +32,7 @@ class IntervalsController < ApplicationController
         format.html # show.html.erb
         format.json { render json: @interval }
       else
-        format.html { redirect_to intervals_today_url, alert: 'showing this interval is not allowed'}
+        format.html { redirect_to today_intervals_url, alert: 'showing this interval is not allowed'}
         format.json { head :no_content }        
       end
     end
@@ -84,7 +89,7 @@ class IntervalsController < ApplicationController
 
     respond_to do |format|
       if @interval.access_allowed?(current_user)
-        format.html { redirect_to intervals_today_url, notice: 'Interval deleted.' }
+        format.html { redirect_to today_intervals_url, notice: 'Interval deleted.' }
         format.json { head :no_content }
       else
         format.html { redirect_to intervals_url, alert: "deleting interval denied." }
@@ -96,10 +101,10 @@ class IntervalsController < ApplicationController
   def start
     respond_to do |format|
       if not Interval.open?(current_user) and Interval.start_interval(current_user)
-        format.html { redirect_to intervals_today_url, notice: 'started working.' }
+        format.html { redirect_to today_intervals_url, notice: 'started working.' }
         format.json { head :no_content }
       else
-        format.html { redirect_to intervals_today_url, notice: 'you are already working.' }
+        format.html { redirect_to today_intervals_url, notice: 'you are already working.' }
         format.json { head :no_content }
       end
     end
@@ -108,10 +113,10 @@ class IntervalsController < ApplicationController
   def stop
     respond_to do |format|
       if Interval.stop_interval(current_user)
-        format.html { redirect_to intervals_today_url, notice: 'stopped working.' }
+        format.html { redirect_to today_intervals_url, notice: 'stopped working.' }
         format.json { head :no_content }
       else
-        format.html { redirect_to intervals_today_url, notice: 'you are not working.' }
+        format.html { redirect_to today_intervals_url, notice: 'you are not working.' }
         format.json { head :no_content }
       end
     end

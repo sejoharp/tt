@@ -33,7 +33,7 @@ describe Interval do
 		intervals.first.start.should eq start
 		intervals.last.start.should eq start
 	end
-		it 'all intervals from today' do
+		it "all intervals from today (may not work near 0 o'clock)" do
 		 intervals = Interval.all_intervals_in_range Date.today..(Date.today + 1),users(:testuser)
 		 intervals.should eq([intervals(:three)])
 	end
@@ -47,12 +47,11 @@ describe Interval do
 		Interval.all_intervals(users(:seconduser)).size.should eq 2
 	end
 	it 'diff from an interval equals 3600 secs' do
-		interval = Interval.new( :start => DateTime.new(2012,7,17,10,0), :stop => DateTime.new(2012,7,17,11,0))
-		interval.diff.should eq 3600
+		Interval.new( :start => DateTime.new(2012,7,17,10,0), 
+			:stop => DateTime.new(2012,7,17,11,0)).diff.should eq 3600
 	end
 	it 'diff without stop calcuates diff till now' do
-		interval = Interval.new( :start => DateTime.new(2012,7,15,10,0))
-		interval.diff.should be > 0
+		Interval.new( :start => DateTime.new(2012,7,15,10,0)).diff.should be > 0
 	end
 	it 'all_intervals delivers 2 entries' do
 		user = User.new(:name=>'user', :password=>'pw')
@@ -71,7 +70,8 @@ describe Interval do
 		Interval.get_open_intervals(user).size.should eq 2
 	end
 	it 'it should not save because start is greater than stop' do
-		Interval.new(:start => DateTime.new(2012,7,1),:stop=> DateTime.new(2012,6,30), :user=> users(:testuser)).save.should eq false
+		Interval.new(:start => DateTime.new(2012,7,1),:stop=> DateTime.new(2012,6,30), 
+			:user=> users(:testuser)).save.should eq false
 	end
 	it 'it should not find an open interval' do
 		Interval.open?(users(:testuser)).should eq false
@@ -92,8 +92,10 @@ describe Interval do
 		interval.access_allowed?(user).should eq true
 	end
 	it 'diff from an 2 intervals equals 7200 secs' do
-		interval1 = Interval.new( :start => DateTime.new(2012,7,17,10,0), :stop => DateTime.new(2012,7,17,11,0))
-		interval2 = Interval.new( :start => DateTime.new(2012,7,17,10,0), :stop => DateTime.new(2012,7,17,11,0))
+		interval1 = Interval.new( :start => DateTime.new(2012,7,17,10,0), 
+			:stop => DateTime.new(2012,7,17,11,0))
+		interval2 = Interval.new( :start => DateTime.new(2012,7,17,10,0), 
+			:stop => DateTime.new(2012,7,17,11,0))
 		Interval.sum_diffs([interval1,interval2]).should eq 7200
 	end
 	it 'diff from an 0 intervals equals 0 secs' do

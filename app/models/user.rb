@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :worktime
 	validates_uniqueness_of :name
+	validates :worktime, :numericality => { :greater_than_or_equal_to => 0 }
 
 	def authenticate(password)
 	  if self.password_hash == BCrypt::Engine.hash_secret(password, self.password_salt)

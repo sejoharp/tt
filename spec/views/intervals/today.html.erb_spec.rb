@@ -13,7 +13,7 @@ describe "intervals/today" do
     rendered.should =~ /start working/
     rendered.should_not =~ /stop working/
   end
-	it "displays stop button" do
+  it "displays stop button" do
     assign(:intervals, [
     	stub_model(Interval, :start => DateTime.now,:user => User.new(:name=>'testuser',:password=>'pw')),
     	stub_model(Interval, :start => DateTime.now,:user => User.new(:name=>'testuser',:password=>'pw'))

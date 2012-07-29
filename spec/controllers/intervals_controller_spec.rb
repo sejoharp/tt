@@ -19,7 +19,7 @@ describe IntervalsController do
   end
 
   describe "GET today" do
-    it "displays one interval" do
+    it "displays one interval (may not work near 0 o'clock)" do
       get :today, {}, valid_session
       assigns(:intervals).should eq([intervals(:three)])
     end
@@ -41,7 +41,7 @@ describe IntervalsController do
     end
     it "redirect to today because interval is from an other user" do
       get :show, {:id => intervals(:four).to_param}, valid_session
-      response.should redirect_to intervals_today_url
+      response.should redirect_to today_intervals_url
     end
     it "returns an error message because interval is from an other user" do
       get :show, {:id => intervals(:four).to_param}, valid_session
@@ -63,7 +63,7 @@ describe IntervalsController do
     end
     it 'should redirect to intervals today' do
       put :stop, {}, valid_session
-      response.should redirect_to(intervals_today_url)
+      response.should redirect_to(today_intervals_url)
     end
     it "returns a confirmation notice" do
       Interval.start_interval(users(:testuser))
@@ -90,7 +90,7 @@ describe IntervalsController do
     end
     it 'should redirect to intervals index' do
       post :start, {}, valid_session
-      response.should redirect_to(intervals_today_url)
+      response.should redirect_to(today_intervals_url)
     end
     it "returns a confirmation notice" do
       post :start, {}, valid_session
@@ -229,7 +229,7 @@ describe IntervalsController do
 
     it "redirects to the intervals list" do
       delete :destroy, {:id => intervals(:one).to_param}, valid_session
-      response.should redirect_to(intervals_today_url)
+      response.should redirect_to(today_intervals_url)
     end
 
     it "returns a notice" do

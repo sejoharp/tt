@@ -6,7 +6,7 @@
 <%= render :partial => 'list' %>
 
 <% if @is_working %>
-	<%= link_to 'stop working', intervals_stop_path, :method => :put, :class => 'btn btn-primary' %>
+	<%= link_to 'stop working', stop_interval_path, :method => :put, :class => 'btn btn-primary' %>
 <% else %>
-	<%= link_to 'start working', intervals_start_path, :method => :post, :class => 'btn btn-primary' %>
+	<%= link_to 'start working', start_interval_path, :method => :post, :class => 'btn btn-primary' %>
 <% end %>
