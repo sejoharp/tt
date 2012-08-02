@@ -23,4 +23,14 @@ describe User do
   it 'authentication fails with the false pw' do
     users(:testuser).authenticate('falsepassword').should eq false
   end
+  it 'without overtime gets 0 secs overtime' do
+    user = User.create(:name=>'testuser2',:password=>'testpw',:worktime=>0)
+    user.overtime.should eq 0
+  end
+  it 'deleting overtime results in 0 overtime' do
+    user = users(:testuser)
+    user.overtime = ''
+    user.save
+    user.overtime.should eq 0
+  end
 end

@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   attr_accessible :name, :password, :password_confirmation, :worktime, :overtime
   attr_accessor :password
   before_save :encrypt_password
+  before_save :set_default
   
   validates_confirmation_of :password
   validates_presence_of :password, :on => :create
@@ -23,5 +24,11 @@ class User < ActiveRecord::Base
 	  	self.password_salt = BCrypt::Engine.generate_salt
 	  	self.password_hash = BCrypt::Engine.hash_secret(password, password_salt)
 	  end
+	end
+
+	def set_default
+		if not self.overtime.present?
+			self.overtime = 0
+		end
 	end
 end

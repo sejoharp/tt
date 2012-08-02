@@ -6,7 +6,14 @@ class ApplicationController < ActionController::Base
 	  @current_user ||= User.find(session[:user_id]) if session[:user_id]
 	end
 
-	def authorize
-    redirect_to login_url, alert: "Not authorized" if current_user.nil?
+	def authenticate
+    redirect_to login_url, alert: "Not authenticated" if current_user.nil?
+	end
+
+	def authorize(user)
+		if current_user != user
+			session[:user_id] = nil
+			redirect_to login_url, alert: "Not authorized" 
+		end
 	end
 end

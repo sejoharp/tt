@@ -103,7 +103,7 @@ describe IntervalsController do
     end
     it "returns a error notice, because user is not logged in" do
       post :start, {}
-      flash[:alert].should eq 'Not authorized'
+      flash[:alert].should eq 'Not authenticated'
     end
     it "redirects to login page, because user is not logged in" do
       post :start, {}
