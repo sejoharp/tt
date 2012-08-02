@@ -2,7 +2,7 @@
 testuser:
   name: testuser
   worktime: 28080
-  overtime: 0
+  overtime: 3600
   password_hash: "$2a$10$fKXhFeWZ7zjPQxzKu6oshuBE4E5agpZGwYiwLw8.28.ZCTHOPgDy2"
   password_salt: "$2a$10$fKXhFeWZ7zjPQxzKu6oshu"
 

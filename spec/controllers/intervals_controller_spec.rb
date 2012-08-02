@@ -32,6 +32,30 @@ describe IntervalsController do
       get :today, {}, valid_session
       assigns(:is_working).should eq true
     end
+    it "testuser has to work 28080 secs per day" do
+      get :today, {}, valid_session
+      assigns(:worktime).should eq 28080
+    end
+    it "testuser has 0 secs overtime" do
+      get :today, {}, valid_session
+      assigns(:overtime).should eq 3600
+    end
+    it "testuser worked 3601 secs" do
+      get :today, {}, valid_session
+      assigns(:worked_time).should eq 1
+    end
+    it "testuser worked in two intervals" do
+      get :today, {}, valid_session
+      assigns(:intervals).size.should eq 1
+    end
+    it "testuser has to work 28079 secs without overtime" do
+      get :today, {}, valid_session
+      assigns(:time_to_work_without_overtime).should eq 28079
+    end
+    it "testuser has to work 24479 secs with overtime" do
+      get :today, {}, valid_session
+      assigns(:time_to_work).should eq 24479
+    end
   end
 
   describe "GET show" do
