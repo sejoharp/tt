@@ -3,10 +3,15 @@ class Interval < ActiveRecord::Base
   attr_accessible :start, :stop, :user
   validates_presence_of :user
   validates_presence_of :start
-  validate :stop_has_to_be_greater_than_or_equal_to_start, :if => '!stop.nil?'
+  validate :stop_has_to_be_greater_than_or_equal_to_start, :if => 'not stop.nil?'
+  before_save :set_overtime, :if => 'not stop.nil?'
 
   def self.all_intervals_in_range(range,user)
   	Interval.where(:start => range, :user_id=>user).order(:start)
+  end
+
+  def self.all_intervals_from_today(user)
+    Interval.all_intervals_in_range(Date.today..Date.today + 1,user)
   end
 
   def self.all_intervals(user)
@@ -61,5 +66,33 @@ class Interval < ActiveRecord::Base
     sum = 0
     intervals.each {|interval| sum += interval.diff }
     sum
+  end
+
+  def calculate_offset_for_altered_old_interval
+      old_overtime = Interval.find(self.id).diff - self.user.worktime
+      new_overtime = self.diff - self.user.worktime
+      new_overtime - old_overtime
+  end
+
+  def calculate_offset_for_new_old_interval(intervals)
+    worked_time = Interval.sum_diffs(intervals) + self.diff
+    if worked_time > self.user.worktime
+      self.diff - self.user.worktime
+    else
+      0
+    end
+  end
+
+  def set_overtime
+    if self.stop.today?
+        intervals = Interval.all_intervals_from_today(self.user)
+        self.user.overtime += self.calculate_offset_for_new_old_interval(intervals)
+    elsif self.id
+      self.user.overtime += self.calculate_offset_for_altered_old_interval
+    else
+        intervals = Interval.all_intervals_in_range(self.start..self.start + 1, self.user)
+        self.user.overtime += self.calculate_offset_for_new_old_interval(intervals)
+    end
+    self.user.save
   end
 end

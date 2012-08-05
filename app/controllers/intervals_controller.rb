@@ -11,7 +11,7 @@ class IntervalsController < ApplicationController
   end
 
   def today
-    @intervals = Interval.all_intervals_in_range(Date.today..Date.today + 1,current_user)
+    @intervals = Interval.all_intervals_from_today(current_user)
     @is_working = Interval.open? current_user
     @worktime = current_user.worktime
     @overtime = current_user.overtime
