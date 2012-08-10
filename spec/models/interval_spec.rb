@@ -101,7 +101,7 @@ describe Interval do
     start = DateTime.now
     stop = start + (28081/86400.0)
     Interval.create!(:start => start, :stop => stop , :user=> users(:seconduser))
-    users(:seconduser).overtime.should eq 1
+    User.find(users(:seconduser).id).overtime.should eq 3601
   end
   it 'when changing an interval in the past to less than worktime overtime gets updated' do
     start = DateTime.new(2012,7,1,8)
@@ -113,7 +113,7 @@ describe Interval do
     start = DateTime.new(2012,7,1,8)
     stop = start + (28081/86400.0)
     interval = Interval.new(:start => start, :stop => stop , :user=> users(:seconduser))
-    interval.calculate_offset_for_new_old_interval([interval]).should eq 1
+    interval.calculate_offset_for_new_old_interval.should eq 1
   end
   it 'when changing an interval in the past overtime gets updated' do
     start = DateTime.new(2012,7,1,8)
@@ -126,14 +126,14 @@ describe Interval do
     start = DateTime.now
     stop = start + (1/24.0)
     Interval.create!(:start => start, :stop => stop , :user=> users(:seconduser))
-    users(:seconduser).overtime.should eq 0
+    User.find(users(:seconduser).id).overtime.should eq 0
   end
-    it "when working today more than worktime overtime gets updated (may not work near 0 o'clock)" do
+  it "when working today more than worktime overtime gets updated (may not work near 0 o'clock)" do
 		user = users(:testuser)
     start = DateTime.now
     stop = start + (28081/86400.0)
     Interval.create!(:start => start, :stop => stop , :user=> user)
-    user.overtime.should eq 3602
+    User.find(user.id).overtime.should eq 3602
   end
   it 'when altering an old interval overtime gets updated' do
   	intervals(:one).update_attribute(:stop, DateTime.new(2000,1,1,17))
@@ -145,5 +145,36 @@ describe Interval do
   	interval = Interval.create(:start => start, :stop => stop , :user=> users(:seconduser))
   	interval.stop = stop + (1/86400.0)
   	interval.calculate_offset_for_altered_old_interval.should eq 1
+  end
+  it 'User works three in three intervals today' do
+		user = users(:testuser)
+    start = DateTime.now
+    stop = start + (28081/86400.0)
+    Interval.create!(:start => start, :stop => stop , :user=> user)
+    Interval.create!(:start => start, :stop => start + (1/86400.0) , :user=> user)
+    intervals = Interval.all_intervals_from_today(user)
+    intervals.each {|interval| interval.start.today?.should eq true }
+  end
+  it 'User has 2h and 1sec overtime' do
+		user = users(:thriduser)
+    start = DateTime.now
+    Interval.create!(:start => start, :stop => start + (7200/86400.0), :user=> user)
+    Interval.create!(:start => start, :stop => start + (28080/86400.0) , :user=> user)
+    Interval.create!(:start => start, :stop => start + (1/86400.0) , :user=> user)
+    User.find(user.id).overtime.should eq 7201
+  end
+  it 'User has 1sec overtime' do
+		user = users(:thriduser)
+    start = DateTime.now
+    Interval.create!(:start => start, :stop => start + (28080/86400.0) , :user=> user)
+    Interval.create!(:start => start, :stop => start + (1/86400.0) , :user=> user)
+    User.find(user.id).overtime.should eq 1
+  end
+  it 'User has 1sec overtime' do
+		user = users(:thriduser)
+    start = DateTime.now
+    Interval.create!(:start => start, :stop => start + (28079/86400.0) , :user=> user)
+    Interval.create!(:start => start, :stop => start + (2/86400.0) , :user=> user)
+    User.find(user.id).overtime.should eq 1
   end
 end

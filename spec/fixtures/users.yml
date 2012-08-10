@@ -13,3 +13,11 @@ seconduser:
   overtime: 0
   password_hash: "$2a$10$SLwc/fHE3z172URD0uk38ekU13uq0tyO05eiqNxGtF6iQcCtS8l9y"
   password_salt: "$2a$10$SLwc/fHE3z172URD0uk38e"
+
+# password == rambopw
+thriduser:
+  name: thriduser
+  worktime: 28080
+  overtime: 0
+  password_hash: "$2a$10$SLwc/fHE3z172URD0uk38ekU13uq0tyO05eiqNxGtF6iQcCtS8l9y"
+  password_salt: "$2a$10$SLwc/fHE3z172URD0uk38e"

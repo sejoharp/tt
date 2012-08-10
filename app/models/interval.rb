@@ -74,24 +74,42 @@ class Interval < ActiveRecord::Base
       new_overtime - old_overtime
   end
 
-  def calculate_offset_for_new_old_interval(intervals)
+  def calculate_offset_for_new_old_interval
+    intervals = Interval.all_intervals_in_range(self.start..self.start + 1, self.user)
     worked_time = Interval.sum_diffs(intervals) + self.diff
     if worked_time > self.user.worktime
-      self.diff - self.user.worktime
+      total_overtime_today = worked_time - self.user.worktime
+      if total_overtime_today > self.diff
+        self.diff - self.user.worktime
+      else
+        total_overtime_today
+      end
+    else
+      0
+    end
+  end
+
+  def calculate_offset_for_today
+    intervals = Interval.all_intervals_from_today(self.user)
+    intervals.push(self)
+    worked_time = Interval.sum_diffs(intervals)
+    overtime = worked_time - self.user.worktime
+    if worked_time > self.user.worktime and overtime >= self.diff
+      self.diff
+    elsif worked_time > self.user.worktime and overtime < self.diff
+      overtime
     else
       0
     end
   end
 
   def set_overtime
-    if self.stop.today?
-        intervals = Interval.all_intervals_from_today(self.user)
-        self.user.overtime += self.calculate_offset_for_new_old_interval(intervals)
+    if self.start.today?
+      self.user.overtime += self.calculate_offset_for_today
     elsif self.id
       self.user.overtime += self.calculate_offset_for_altered_old_interval
     else
-        intervals = Interval.all_intervals_in_range(self.start..self.start + 1, self.user)
-        self.user.overtime += self.calculate_offset_for_new_old_interval(intervals)
+      self.user.overtime += self.calculate_offset_for_new_old_interval
     end
     self.user.save
   end

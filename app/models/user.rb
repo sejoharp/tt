@@ -12,11 +12,7 @@ class User < ActiveRecord::Base
 	validates :worktime, :numericality => { :greater_than_or_equal_to => 0 }
 
 	def authenticate(password)
-	  if self.password_hash == BCrypt::Engine.hash_secret(password, self.password_salt)
-	  	true
-	  else
-	   	false
-	  end
+	  self.password_hash == BCrypt::Engine.hash_secret(password, self.password_salt)
 	end
 	  
 	def encrypt_password
