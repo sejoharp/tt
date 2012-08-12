@@ -177,4 +177,19 @@ describe Interval do
     Interval.create!(:start => start, :stop => start + (2/86400.0) , :user=> user)
     User.find(user.id).overtime.should eq 1
   end
+  it 'User has 1sec overtime' do
+		user = users(:thriduser)
+    start = DateTime.now
+    Interval.create!(:start => start, :stop => start + (28079/86400.0) , :user=> user)
+    Interval.create!(:start => start, :stop => start + (2/86400.0) , :user=> user)
+    User.find(user.id).overtime.should eq 1
+  end
+  it 'overtime gets updated if user deletes an interval' do
+		user = users(:thriduser)
+    start = DateTime.now
+    Interval.create!(:start => start, :stop => start + (28079/86400.0) , :user=> user)
+    interval = Interval.create(:start => start, :stop => start + (2/86400.0) , :user=> user)
+    interval.destroy
+    User.find(user.id).overtime.should eq 0
+  end  
 end

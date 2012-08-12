@@ -4,7 +4,8 @@ class Interval < ActiveRecord::Base
   validates_presence_of :user
   validates_presence_of :start
   validate :stop_has_to_be_greater_than_or_equal_to_start, :if => 'not stop.nil?'
-  before_save :set_overtime, :if => 'not stop.nil?'
+  before_save :set_overtime_before_update, :if => 'not stop.nil?'
+  after_destroy :set_overtime_after_destroy, :if => 'not stop.nil?'
 
   def self.all_intervals_in_range(range,user)
   	Interval.where(:start => range, :user_id=>user).order(:start)
@@ -103,7 +104,7 @@ class Interval < ActiveRecord::Base
     end
   end
 
-  def set_overtime
+  def set_overtime_before_update
     if self.start.today?
       self.user.overtime += self.calculate_offset_for_today
     elsif self.id
@@ -112,5 +113,7 @@ class Interval < ActiveRecord::Base
       self.user.overtime += self.calculate_offset_for_new_old_interval
     end
     self.user.save
+  end
+  def set_overtime_after_destroy
   end
 end

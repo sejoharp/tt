@@ -98,6 +98,12 @@ describe IntervalsController do
       put :stop, {}, valid_session
       flash[:notice].should eq 'you are not working.'
     end
+    it 'overtime from current_user will get updated' do
+      user = users(:thriduser)
+      Interval.create!(:start => DateTime.now - (28081/86400.0) , :user=> user)
+      put :stop, {}, {:user_id =>user.id}
+      assigns(:current_user).overtime.should be > 0
+    end
   end
 
   describe "POST start" do
