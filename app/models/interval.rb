@@ -4,7 +4,7 @@ class Interval < ActiveRecord::Base
   validates_presence_of :user
   validates_presence_of :start
   validate :stop_has_to_be_greater_than_or_equal_to_start, :if => 'not stop.nil?'
-  before_save :set_overtime_before_update, :if => 'not stop.nil?'
+  before_save :set_overtime_before_update, :if => 'not stop.nil? and valid?'
   after_destroy :set_overtime_after_destroy, :if => 'not stop.nil?'
 
   def self.all_intervals_in_range(range,user)
@@ -52,7 +52,6 @@ class Interval < ActiveRecord::Base
   		DateTime.now.to_f - start.to_f
   	end
   end
-
   def access_allowed?(user)
     self.user == user
   end
@@ -69,51 +68,53 @@ class Interval < ActiveRecord::Base
     sum
   end
 
-  def calculate_offset_for_altered_old_interval
-      old_overtime = Interval.find(self.id).diff - self.user.worktime
-      new_overtime = self.diff - self.user.worktime
-      new_overtime - old_overtime
+  def calculate_new_overtime_for_altered_old_interval
+      intervals = Interval.all_intervals_in_range(self.start..self.start + 1, self.user)
+      interval_old = Interval.find(self.id)
+      worktime_old = Interval.sum_diffs(intervals)
+      worktime_new = worktime_old - interval_old.diff + self.diff
+      worktime_diff = worktime_new - worktime_old
+      self.user.overtime + worktime_diff
   end
 
-  def calculate_offset_for_new_old_interval
+  def calculate_new_overtime_for_new_old_interval
     intervals = Interval.all_intervals_in_range(self.start..self.start + 1, self.user)
-    worked_time = Interval.sum_diffs(intervals) + self.diff
-    if worked_time > self.user.worktime
-      total_overtime_today = worked_time - self.user.worktime
-      if total_overtime_today > self.diff
-        self.diff - self.user.worktime
-      else
-        total_overtime_today
-      end
+    if intervals.empty?
+      self.diff - self.user.worktime + self.user.overtime
     else
-      0
+      self.diff + self.user.overtime
     end
   end
 
-  def calculate_offset_for_today
+  def calculate_new_overtime_for_today
     intervals = Interval.all_intervals_from_today(self.user)
-    intervals.push(self)
-    worked_time = Interval.sum_diffs(intervals)
-    overtime = worked_time - self.user.worktime
-    if worked_time > self.user.worktime and overtime >= self.diff
-      self.diff
-    elsif worked_time > self.user.worktime and overtime < self.diff
-      overtime
+    if intervals.empty?
+      self.diff - self.user.worktime + self.user.overtime
     else
-      0
+      self.diff + self.user.overtime
     end
   end
 
   def set_overtime_before_update
     if self.start.today?
-      self.user.overtime += self.calculate_offset_for_today
+      self.user.overtime = self.calculate_new_overtime_for_today
     elsif self.id
-      self.user.overtime += self.calculate_offset_for_altered_old_interval
+      self.user.overtime = self.calculate_new_overtime_for_altered_old_interval
     else
-      self.user.overtime += self.calculate_offset_for_new_old_interval
+      self.user.overtime = self.calculate_new_overtime_for_new_old_interval
     end
     self.user.save
   end
+
   def set_overtime_after_destroy
+    intervals = Interval.all_intervals_in_range(self.start..self.start + 1, self.user)
+    overtime_old = Interval.sum_diffs(intervals) + self.diff - self.user.worktime
+    overtime_new = Interval.sum_diffs(intervals) - self.user.worktime
+    if overtime_old > overtime_new
+      self.user.overtime -= self.diff - self.user.worktime
+ 
+    end
+      
+    self.user.save
   end
 end

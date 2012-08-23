@@ -36,9 +36,9 @@ describe IntervalsController do
       get :today, {}, valid_session
       assigns(:worktime).should eq 28080
     end
-    it "testuser has 0 secs overtime" do
+    it "testuser has -28079 secs overtime" do
       get :today, {}, valid_session
-      assigns(:overtime).should eq 3600
+      assigns(:overtime).should eq -28079
     end
     it "testuser worked 3601 secs" do
       get :today, {}, valid_session
@@ -54,7 +54,7 @@ describe IntervalsController do
     end
     it "testuser has to work 24479 secs with overtime" do
       get :today, {}, valid_session
-      assigns(:time_to_work).should eq 24479
+      assigns(:time_to_work).should eq 56158
     end
   end
 

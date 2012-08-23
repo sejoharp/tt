@@ -35,6 +35,7 @@ group :development, :test do
   gem "autotest-rails", "~> 4.1.0"
   gem 'autotest-growl'
   gem 'autotest-fsevent'
+  gem 'debugger'
 end
 
 # To use ActiveModel has_secure_password

@@ -1,12 +1,12 @@
 one:
   user: testuser
   start: <%= DateTime.new(2000,1,1,8) %>
-  stop: <%= DateTime.new(2000,1,1,16) %>
+  stop: <%= DateTime.new(2000,1,1,8) + (28080/86400.0) %>
 
 two:
   user: testuser
-  start: <%= 1.days.ago.to_datetime - (2/24) %>
-  stop: <%= 1.days.ago.to_datetime  - (1/24) %>
+  start: <%= 1.days.ago.to_datetime %>
+  stop: <%= 1.days.ago.to_datetime + (28080/86400.0) %>
 
 three:
   user: testuser
