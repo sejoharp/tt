@@ -107,14 +107,7 @@ class Interval < ActiveRecord::Base
   end
 
   def set_overtime_after_destroy
-    intervals = Interval.all_intervals_in_range(self.start..self.start + 1, self.user)
-    overtime_old = Interval.sum_diffs(intervals) + self.diff - self.user.worktime
-    overtime_new = Interval.sum_diffs(intervals) - self.user.worktime
-    if overtime_old > overtime_new
-      self.user.overtime -= self.diff - self.user.worktime
- 
-    end
-      
+    self.user.overtime -= self.diff
     self.user.save
   end
 end
