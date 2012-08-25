@@ -13,8 +13,8 @@
       <% @intervals.each do |interval| %>
         <tr>
           <td><%= link_to interval.id, interval_path(interval) %></td>
-          <td><%= interval.start %></td>
-          <td><%= interval.stop %></td>
+          <td><%= format_datetime_depending_on_date interval.start %></td>
+          <td><%= format_datetime_depending_on_date interval.stop %></td>
           <td><%= interval.diff %></td>
           <td>
             <%= link_to t('.edit', :default => t("helpers.links.edit")),

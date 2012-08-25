@@ -45,13 +45,13 @@
   <div class="control-group">
     finishing time:
     <div class="controls">
-      <%= @finishing_time %>
+      <%= format_datetime_depending_on_date @finishing_time %>
     </div>
   </div>
   <div class="control-group">
     finishing time without overtime:
     <div class="controls">
-      <%= @finishing_time_without_overtime %>
+      <%= format_datetime_depending_on_date @finishing_time_without_overtime %>
     </div>
   </div>
 <% end %>
