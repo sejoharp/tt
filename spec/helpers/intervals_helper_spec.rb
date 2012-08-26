@@ -22,7 +22,7 @@ describe IntervalsHelper do
   	datetime = DateTime.now.change({:hour=>10, :min => 11})
   	helper.format_datetime_depending_on_date(datetime).should eq '10:11'
   end
-  it 'datetimes from past or future look like 10.07.2012 12:11' do
+  it 'datetimes from past look like 10.07.2012 12:11' do
   	datetime = DateTime.new(2012,7,10,10,11)
   	helper.format_datetime_depending_on_date(datetime).should eq '10.07.2012 12:11'
   end

@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
 	before_filter :authenticate, :only => [:edit, :update, :destroy]
-
+  before_filter :authorize, :only => [:edit, :update, :destroy, :show]
 	def new
 	  	@user = User.new
 	end
@@ -18,18 +18,16 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
-    authorize(@user)
-    @user
   end
 
   # PUT /users/1
   # PUT /users/1.json
   def update
     @user = User.find(params[:id])
-    authorize(@user)
 
     respond_to do |format|
       if @user.update_attributes(params[:user])
+        @current_user = @user
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
         format.json { head :no_content }
       else
@@ -43,8 +41,6 @@ class UsersController < ApplicationController
   # DELETE /users/1.json
   def destroy
     @user = User.find(params[:id])
-    authorize(@user)
-
     @user.destroy
 
     respond_to do |format|
@@ -56,22 +52,10 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def show
     @user = User.find(params[:id])
-    authorize(@user)
 
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @user }
     end
   end
-
-    # GET /users
-  # GET /users.json
-  ##def index
-  ##  @users = User.all
-
-  ##  respond_to do |format|
-  ##    format.html # index.html.erb
-  ##    format.json { render json: @users }
-  ##  end
-  ##end
 end

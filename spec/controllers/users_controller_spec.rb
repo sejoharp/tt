@@ -18,5 +18,14 @@ describe UsersController do
       response.should redirect_to(login_url)
     end
   end
-
+  describe "PUT 'update'" do
+    it "current_user data will be updated, when logged in user data gets updated" do
+      put :update, {:id => users(:thriduser).to_param, :user => {'overtime' => '2'}}, {:user_id =>users(:thriduser).id}
+      assigns(:current_user).overtime.should eq 2
+    end
+    it "redirect to login because testuser has no permission to edit seconduser" do
+      put :update, {:id => users(:thriduser).to_param, :user => {'overtime' => '2'}}, valid_session
+      response.should redirect_to(login_url)
+    end
+  end
 end

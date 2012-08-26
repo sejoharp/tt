@@ -6,7 +6,7 @@ module IntervalsHelper
 		datetime.in_time_zone('Berlin').strftime('%H:%M')
 	end
 	def format_datetime_depending_on_date(datetime)
-		if datetime != nil 
+		if not datetime.nil?
 			if datetime.today?
 				format_time datetime
 			else
