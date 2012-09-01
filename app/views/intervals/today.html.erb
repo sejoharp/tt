@@ -33,13 +33,13 @@
   <div class="control-group">
     time to work with overtime:
     <div class="controls">
-      <%= format_duration calcuate_hours_mins_secs @time_to_work %>
+      <%= if @time_to_work_without_overtime <= 0 then 'it is enough' else format_duration calcuate_hours_mins_secs @time_to_work end %>
     </div>
   </div>
   <div class="control-group">
     time to work without overtime:
     <div class="controls">
-      <%= format_duration calcuate_hours_mins_secs @time_to_work_without_overtime %>
+      <%= if @time_to_work <= 0 then 'it is enough' else format_duration calcuate_hours_mins_secs @time_to_work_without_overtime end %>
     </div>
   </div>
   <div class="control-group">
