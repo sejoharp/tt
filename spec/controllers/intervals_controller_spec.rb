@@ -52,9 +52,15 @@ describe IntervalsController do
       get :today, {}, valid_session
       assigns(:time_to_work_without_overtime).should eq 28079
     end
-    it "testuser has to work 24479 secs with overtime" do
-      get :today, {}, valid_session
-      assigns(:time_to_work).should eq 56158
+    it "testuser can finish in 28080 secs (does not work every time)" do
+      get :today, {}, {:user_id =>users(:thriduser).id}
+      current_user = assigns(:current_user)
+      finishing_time_expected = DateTime.now + (current_user.worktime/86400.0) + (current_user.overtime/86400.0)
+      assigns(:finishing_time).year.should eq finishing_time_expected.year
+      assigns(:finishing_time).month.should eq finishing_time_expected.month
+      assigns(:finishing_time).day.should eq finishing_time_expected.day
+      assigns(:finishing_time).hour.should eq finishing_time_expected.hour
+      assigns(:finishing_time).min.should eq finishing_time_expected.min
     end
   end
 

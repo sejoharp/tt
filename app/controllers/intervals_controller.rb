@@ -18,8 +18,8 @@ class IntervalsController < ApplicationController
     @worked_time = Interval.sum_diffs @intervals
     @time_to_work = @worktime - @worked_time - @overtime
     @time_to_work_without_overtime = @worktime - @worked_time
-    @finishing_time = DateTime.now + @time_to_work
-    @finishing_time_without_overtime = DateTime.now + @time_to_work_without_overtime
+    @finishing_time = DateTime.now + (@time_to_work/86400.0)
+    @finishing_time_without_overtime = DateTime.now + (@time_to_work_without_overtime/86400.0)
 
     respond_to do |format|
       format.html # index.html.erb

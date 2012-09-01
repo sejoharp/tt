@@ -15,43 +15,43 @@
   <div class="control-group">
     worktime:
     <div class="controls">
-      <%= @worktime %>
+      <%= format_duration calcuate_hours_mins_secs @worktime %>
     </div>
   </div>
   <div class="control-group">
     overtime:
     <div class="controls">
-      <%= @overtime %>
+      <%= format_duration calcuate_hours_mins_secs @overtime %>
     </div>
   </div>
   <div class="control-group">
     worked time:
     <div class="controls">
-      <%= @worked_time %>
+      <%= format_duration calcuate_hours_mins_secs @worked_time %>
     </div>
   </div>
   <div class="control-group">
     time to work with overtime:
     <div class="controls">
-      <%= @time_to_work %>
+      <%= format_duration calcuate_hours_mins_secs @time_to_work %>
     </div>
   </div>
   <div class="control-group">
     time to work without overtime:
     <div class="controls">
-      <%= @time_to_work_without_overtime %>
+      <%= format_duration calcuate_hours_mins_secs @time_to_work_without_overtime %>
     </div>
   </div>
   <div class="control-group">
     finishing time:
     <div class="controls">
-      <%= format_datetime_depending_on_date @finishing_time %>
+      <%= if @time_to_work <= 0 then 'now' else format_datetime_depending_on_date @finishing_time end %>
     </div>
   </div>
   <div class="control-group">
     finishing time without overtime:
     <div class="controls">
-      <%= format_datetime_depending_on_date @finishing_time_without_overtime %>
+      <%= if @time_to_work_without_overtime <= 0 then 'now' else format_datetime_depending_on_date @finishing_time_without_overtime end %>
     </div>
   </div>
 <% end %>
