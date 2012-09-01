@@ -15,31 +15,31 @@
   <div class="control-group">
     worktime:
     <div class="controls">
-      <%= format_duration calcuate_hours_mins_secs @worktime %>
+      <%= format_safe_duration nil,@worktime %>
     </div>
   </div>
   <div class="control-group">
     overtime:
     <div class="controls">
-      <%= format_duration calcuate_hours_mins_secs @overtime %>
+      <%= format_safe_duration nil,@overtime %>
     </div>
   </div>
   <div class="control-group">
     worked time:
     <div class="controls">
-      <%= format_duration calcuate_hours_mins_secs @worked_time %>
+      <%= format_safe_duration nil,@worked_time %>
     </div>
   </div>
   <div class="control-group">
     time to work with overtime:
     <div class="controls">
-      <%= if @time_to_work_without_overtime <= 0 then 'it is enough' else format_duration calcuate_hours_mins_secs @time_to_work end %>
+      <%= format_safe_duration 'it is enough',@time_to_work %>
     </div>
   </div>
   <div class="control-group">
     time to work without overtime:
     <div class="controls">
-      <%= if @time_to_work <= 0 then 'it is enough' else format_duration calcuate_hours_mins_secs @time_to_work_without_overtime end %>
+      <%= format_safe_duration 'it is enough',@time_to_work_without_overtime %>
     </div>
   </div>
   <div class="control-group">

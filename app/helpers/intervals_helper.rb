@@ -12,6 +12,8 @@ module IntervalsHelper
 			else
 				format_datetime datetime
 			end
+		else
+			''
 		end
 	end
 	def calcuate_hours_mins_secs(duration)
@@ -23,5 +25,17 @@ module IntervalsHelper
 	def format_duration(hours_mins_secs)
 		sign = hours_mins_secs[:negative] ? '- ' : ''
 		"#{sign}#{hours_mins_secs[:hours]}h #{hours_mins_secs[:mins]}mins #{hours_mins_secs[:secs]}secs"
+	end
+
+	def format_safe_duration(enough_message, duration)
+		if duration
+			if duration <= 0
+				enough_message
+			else
+				format_duration calcuate_hours_mins_secs duration
+			end
+		else
+			''
+		end
 	end
 end

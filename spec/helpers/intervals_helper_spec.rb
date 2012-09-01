@@ -39,4 +39,13 @@ describe IntervalsHelper do
   it '3601 secs will be displayed as 1h 0mins 1secs' do
     helper.format_duration({:hours => 1,:mins => 0,:secs => 1}).should eq '1h 0mins 1secs'
   end
+  it 'nil duration will be displayed as nothing' do
+    helper.format_safe_duration(nil, nil).should eq ''
+  end
+  it '0 duration will be displayed as it is enough' do
+    helper.format_safe_duration('it is enough', 0).should eq 'it is enough'
+  end
+  it '3661 duration will be displayed as 1h 1mins 1secs' do
+    helper.format_safe_duration('it is enough', 3661).should eq '1h 1mins 1secs'
+  end
 end
