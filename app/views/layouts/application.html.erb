@@ -16,13 +16,13 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </a>
-        <a class="brand" href="#">timetracker</a>
+        <a class="brand" href="<%= today_intervals_path %>">timetracker</a>
         <div class="nav-collapse">
           <ul class="nav">
             <% if current_user %>
               <li><%= link_to "today", today_intervals_path %></li>
               <li><%= link_to "preferences", user_path(current_user) %></li>
-              <li><a>Logged in as <%= current_user.name %>.</a></li>
+              <li><a>Logged in as <%= current_user.name %></a></li>
               <li><%= link_to "Log out", logout_path %></li>
   			    <% else %>
     			    <li><%= link_to "Sign up", signup_path %></li>
