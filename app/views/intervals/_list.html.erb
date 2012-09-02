@@ -15,7 +15,7 @@
           <td><%= link_to interval.id, interval_path(interval) %></td>
           <td><%= format_datetime_depending_on_date interval.start %></td>
           <td><%= format_datetime_depending_on_date interval.stop %></td>
-          <td><%= interval.diff %></td>
+          <td><%= format_safe_duration interval.diff %></td>
           <td>
             <%= link_to t('.edit', :default => t("helpers.links.edit")),
                         edit_interval_path(interval), :class => 'btn btn-mini' %>
