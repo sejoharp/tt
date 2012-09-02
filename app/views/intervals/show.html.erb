@@ -9,7 +9,7 @@
   <dt><strong><%= model_class.human_attribute_name(:stop) %>:</strong></dt>
   <dd><%= format_datetime_depending_on_date @interval.stop %></dd>
   <dt><strong>difference:</strong></dt>
-  <dd><%= format_safe_duration @interval.diff %></dd>
+  <dd><%= format_safe_duration nil,@interval.diff %></dd>
 </dl>
 
 <div class="form-actions">

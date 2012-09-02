@@ -6,11 +6,15 @@
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
   <dd><%= @user.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:worktime) %>:</strong></dt>
+  <dd><%= format_safe_duration nil,@user.worktime %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:overtime) %>:</strong></dt>
+  <dd><%= format_safe_duration nil,@user.overtime %></dd>
 </dl>
 
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
-              users_path, :class => 'btn'  %>
+              today_intervals_path, :class => 'btn'  %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_user_path(@user), :class => 'btn' %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
