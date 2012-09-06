@@ -14,3 +14,4 @@ This is a timetracker written in ruby on rails.
 # used frameworks
 * ruby on rails
 * twitter bootstrap
+* datetimepicker https://github.com/trentrichardson/jQuery-Timepicker-Addon

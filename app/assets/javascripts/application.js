@@ -14,3 +14,14 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require_tree .
+//= require jquery.ui.all
+//= require jquery-ui-timepicker-addon
+$(document).ready(function() {
+  $('.datetimepicker').datetimepicker({
+		ampm: true
+	});
+	$('#interval_start').datetimepicker({
+		ampm: true
+	});
+});
+
