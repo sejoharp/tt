@@ -5,9 +5,9 @@ module ApplicationHelper
 		mins_rest = hours_rest.last.divmod(60)
 		{:hours => hours_rest.first,:mins => mins_rest.first,:secs =>mins_rest.last,:negative => duration < 0}
 	end
-	def format_duration(hours_mins_secs)
-		sign = hours_mins_secs[:negative] ? '- ' : ''
-		"#{sign}#{hours_mins_secs[:hours]}h #{hours_mins_secs[:mins]}mins #{hours_mins_secs[:secs]}secs"
+	def format_duration(duration)
+		sign = duration[:negative] ? '- ' : ''
+		"#{sign}#{duration[:hours]}h #{duration[:mins]}mins"
 	end
 
 	def format_safe_duration(enough_message, duration)

@@ -18,10 +18,8 @@
 //= require jquery-ui-timepicker-addon
 $(document).ready(function() {
   $('.datetimepicker').datetimepicker({
-		ampm: true
-	});
-	$('#interval_start').datetimepicker({
-		ampm: true
+		dateFormat: 'dd.mm.yy',
+		timeFormat: 'hh:mm'
 	});
 });
 
