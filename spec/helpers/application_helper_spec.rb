@@ -8,11 +8,11 @@ describe ApplicationHelper do
     result[:mins].should eq 0
     result[:secs].should eq 1
   end
-  it '-3601 secs will be displayed as - 1h 0mins 1secs' do
-    helper.format_duration({:hours => 1,:mins => 0,:secs => 1, :negative => true}).should eq '- 1h 0mins 1secs'
+  it '-3601 secs will be displayed as - 1h 0mins' do
+    helper.format_duration({:hours => 1,:mins => 0,:secs => 1, :negative => true}).should eq '- 1h 0mins'
   end
-  it '3601 secs will be displayed as 1h 0mins 1secs' do
-    helper.format_duration({:hours => 1,:mins => 0,:secs => 1}).should eq '1h 0mins 1secs'
+  it '3601 secs will be displayed as 1h 0mins' do
+    helper.format_duration({:hours => 1,:mins => 0,:secs => 1}).should eq '1h 0mins'
   end
   it 'nil duration will be displayed as nothing' do
     helper.format_safe_duration(nil, nil).should eq ''
@@ -21,6 +21,6 @@ describe ApplicationHelper do
     helper.format_safe_duration('it is enough', 0).should eq 'it is enough'
   end
   it '3661 duration will be displayed as 1h 1mins 1secs' do
-    helper.format_safe_duration('it is enough', 3661).should eq '1h 1mins 1secs'
+    helper.format_safe_duration('it is enough', 3661).should eq '1h 1mins'
   end
 end
