@@ -39,6 +39,10 @@ group :development, :test do
   gem 'debugger'
 end
 
+group :production do
+  gem 'thin'
+  gem 'pg'
+end
 # To use ActiveModel has_secure_password
 gem 'bcrypt-ruby', :require => 'bcrypt'
 
