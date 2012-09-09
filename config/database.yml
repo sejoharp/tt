@@ -19,10 +19,14 @@ test: &test
   timeout: 5000
 
 production:
-  adapter: sqlite3
-  database: db/production.sqlite3
+  adapter: postgresql
+  encoding: unicode
   pool: 5
-  timeout: 5000
+  database: FIXME
+  username: FIXME
+  password: FIXME
+  host: FIXME
+  port: FIXME
 
 cucumber:
   <<: *test
