@@ -9,7 +9,7 @@
   <dt><strong><%= model_class.human_attribute_name(:worktime) %>:</strong></dt>
   <dd><%= format_safe_duration nil,@user.worktime %></dd>
   <dt><strong><%= model_class.human_attribute_name(:overtime) %>:</strong></dt>
-  <dd><%= format_safe_duration nil,@user.overtime %></dd>
+  <dd><%= format_duration calcuate_hours_mins_secs @user.overtime %></dd>
 </dl>
 
 <div class="form-actions">
