@@ -5,7 +5,7 @@ gem 'rails', '3.2.8'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
+
 
 
 # Gems used only for assets and not required
@@ -13,8 +13,7 @@ gem 'sqlite3'
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
-  gem 'twitter-bootstrap-rails'
-
+  
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platforms => :ruby
 
@@ -23,9 +22,7 @@ end
 
 gem 'jquery-rails'
 gem "jquery-ui-rails"
-
-group :test do  	
-end  	
+gem 'twitter-bootstrap-rails'
 
 group :development, :test do
   gem 'rspec-rails'
@@ -37,6 +34,7 @@ group :development, :test do
   gem 'autotest-growl'
   gem 'autotest-fsevent'
   gem 'debugger'
+  gem 'sqlite3'
 end
 
 group :production do
