@@ -8,6 +8,7 @@ describe "intervals/today" do
     	])
     assign(:is_working, false)
     assign(:time_to_work, 0)
+    assign(:overtime, 0)
     assign(:time_to_work_without_overtime, 0)
     render
 
@@ -21,6 +22,7 @@ describe "intervals/today" do
     	])
     assign(:is_working, true)
     assign(:time_to_work, 0)
+    assign(:overtime, 0)
     assign(:time_to_work_without_overtime, 0)
     render
 
@@ -30,6 +32,7 @@ describe "intervals/today" do
 	it "displays a message that no intervals are available." do
     assign(:intervals, [])
     assign(:is_working, true)
+    assign(:overtime, 0)
     assign(:time_to_work, 0)
     assign(:time_to_work_without_overtime, 0)
     render
