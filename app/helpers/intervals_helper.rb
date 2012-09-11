@@ -1,6 +1,6 @@
 module IntervalsHelper
 	def format_datetime(datetime)
-		datetime.in_time_zone('Berlin').strftime('%d.%m.%Y %H:%M')
+		datetime.strftime('%d.%m.%Y %H:%M')
 	end
 
 	def format_datetime_secure(datetime)
@@ -10,7 +10,7 @@ module IntervalsHelper
 	end
 
 	def format_time(datetime)
-		datetime.in_time_zone('Berlin').strftime('%H:%M')
+		datetime.strftime('%H:%M')
 	end
 	
 	def format_datetime_depending_on_date(datetime)
