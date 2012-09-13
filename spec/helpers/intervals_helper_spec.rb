@@ -12,18 +12,18 @@ require 'spec_helper'
 # end
 describe IntervalsHelper do
   it 'datetime format is like 10.07.2012 10:11' do
-  	helper.format_datetime(DateTime.new(2012,7,10,10,11)).should eq '10.07.2012 12:11'
+  	helper.format_datetime(DateTime.new(2012,7,10,10,11)).should eq '10.07.2012 10:11'
   end
-  it 'datetime format is like 12:11' do
+  it 'datetime format is like 10:11' do
   	datetime = DateTime.now.change({:hour=>10, :min => 11})
   	helper.format_time(datetime).should eq '10:11'
   end
-  it 'datetimes from today look like 12:11' do
+  it 'datetimes from today look like 1:11' do
   	datetime = DateTime.now.change({:hour=>10, :min => 11})
   	helper.format_datetime_depending_on_date(datetime).should eq '10:11'
   end
   it 'datetimes from past look like 10.07.2012 12:11' do
   	datetime = DateTime.new(2012,7,10,10,11)
-  	helper.format_datetime_depending_on_date(datetime).should eq '10.07.2012 12:11'
+  	helper.format_datetime_depending_on_date(datetime).should eq '10.07.2012 10:11'
   end
 end

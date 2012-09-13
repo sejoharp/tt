@@ -17,3 +17,13 @@ four:
   user: seconduser
   start: <%= 2.hour.ago %>
   stop: <%= 1.hour.ago %>
+
+five:
+  user: fourthuser
+  start: <%= 4.hour.ago %>
+  stop: <%= 1.hour.ago %>
+
+six:
+  user: fourthuser
+  start: <%= 4.hour.ago %>
+  stop: <%= 1.hour.ago %>
