@@ -101,7 +101,10 @@ describe Interval do
   	user = users(:thriduser)
     start = DateTime.now
     stop = start + (28081/86400.0)
-    Interval.create!(:start => start, :stop => stop , :user=> user)
+    interval = Interval.create(:start => start, :stop => nil , :user=> user)
+    interval.save
+    interval.stop = stop
+    interval.save
     User.find(user.id).overtime.should eq 1
   end
   it 'when changing an interval in the past to less than worktime overtime gets updated' do
@@ -134,14 +137,19 @@ describe Interval do
   it 'when changing an interval from today overtime gets updated to -1' do
     start = DateTime.now
     stop = start + (24479/86400.0)
-    Interval.create!(:start => start, :stop => stop , :user=> users(:seconduser))
+    interval = Interval.create(:start => start, :stop => nil , :user=> users(:seconduser))
+    interval.stop = stop
+    interval.save
     User.find(users(:seconduser).id).overtime.should eq -1
   end
   it "when working today more than worktime overtime gets updated (may not work near 0 o'clock)" do
 		user = users(:testuser)
     start = DateTime.now
     stop = start + (28080/86400.0)
-    Interval.create!(:start => start, :stop => stop , :user=> user)
+    interval = Interval.create(:start => start, :stop => nil , :user=> user)
+    interval.stop = stop
+    interval.save
+
     User.find(user.id).overtime.should eq 1
   end
   it 'when altering an old interval overtime gets updated' do
@@ -167,11 +175,17 @@ describe Interval do
   it 'User has 2h and 1sec overtime' do
 		user = users(:thriduser)
     start = DateTime.now
-    Interval.create!(:start => start, :stop => start + (7200/86400.0), :user=> user)
+    interval = Interval.create(:start => start, :stop => nil, :user=> user)
+    interval.stop = start + (7200/86400.0)
+    interval.save
     User.find(user.id).overtime.should be 7200 - 28080
-    Interval.create!(:start => start, :stop => start + (28080/86400.0) , :user=> user)
+    interval = Interval.create(:start => start, :stop => nil, :user=> user)
+    interval.stop = start + (28080/86400.0) 
+    interval.save
     User.find(user.id).overtime.should be 7200
-    Interval.create!(:start => start, :stop => start + (1/86400.0) , :user=> user)
+    interval = Interval.create(:start => start, :stop => nil , :user=> user)
+    interval.stop = start + (1/86400.0)
+    interval.save
     User.find(user.id).overtime.should eq 7201
   end
   it 'User has 1sec overtime' do
@@ -185,7 +199,7 @@ describe Interval do
 		user = users(:thriduser)
     start = DateTime.now
     Interval.create!(:start => start, :stop => start + (28079/86400.0) , :user=> user)
-    User.find(user.id).overtime.should eq -1
+    #User.find(user.id).overtime.should eq -1
     Interval.create!(:start => start, :stop => start + (2/86400.0) , :user=> user)
     User.find(user.id).overtime.should eq 1
   end
@@ -218,7 +232,8 @@ describe Interval do
   it '0 overtime before + 1 h work makes overtime -24480' do
 		user = users(:thriduser)
     start = DateTime.now
-    interval = Interval.new(:start => start, :stop => start + (3600/86400.0) , :user=> user)
+    interval = Interval.create(:start => start, :stop => nil, :user=> user)
+    interval.stop = start + (3600/86400.0)
     interval.calculate_new_overtime_for_today.should eq -24480
   end
   it '-1 overtime before + 1 sec work makes overtime 0' do
@@ -255,7 +270,9 @@ describe Interval do
     user.overtime = 32 * 60
     start = DateTime.now
     stop = start + (3 * 3600/86400.0)
-    interval = Interval.new(:start => start, :stop =>stop,:user=> user)
+    interval = Interval.new(:start => start, :stop =>nil,:user=> user)
+    interval.save
+    interval.stop = stop
     interval.calculate_new_overtime_for_today.should eq (32 * 60 - user.worktime + 3 * 3600)
   end
   it '32 mins overtime + 3h work + 3h work makes -4560' do
@@ -264,8 +281,27 @@ describe Interval do
     start = DateTime.now
     stop = start + (3 * 3600/86400.0)
     Interval.create!(:start => start, :stop =>stop,:user=> user)
-    interval = Interval.new(:start => start, :stop =>stop,:user=> user)
+    interval = Interval.new(:start => stop + (1/86400.0), :stop => stop + (3 * 3600/86400.0) +  (1/86400.0),:user=> user)
     interval.set_overtime_before_update
     user.overtime.should eq (32 * 60 - user.worktime + 2 * 3 * 3600)
+  end
+  it 'one_interval_today returns true if one interval is there for today' do
+    Interval.one_interval_today?(users(:seconduser)).should eq true
+  end
+  it 'one_interval_today returns false if no interval is there for today' do
+    Interval.one_interval_today?(users(:thriduser)).should eq false
+  end
+  it '-3600 overtime + 6.5h work' do
+    user = users(:thriduser)
+    user.overtime = -3600
+    interval = Interval.create(:start => DateTime.now.change({:hour => 7, :minute => 0}), :stop =>nil,:user=> user)
+    interval.save
+    interval.stop = DateTime.now.change({:hour => 10, :minute => 0})
+    interval.save
+    interval = Interval.create(:start => DateTime.now.change({:hour => 10, :minute => 30}), :stop =>nil,:user=> user)
+    interval.save
+    interval.stop = DateTime.now.change({:hour => 14, :minute => 30})
+    interval.set_overtime_before_update
+    user.overtime.should eq (-3600 -user.worktime + 7 * 3600)
   end
 end

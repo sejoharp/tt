@@ -1,3 +1,5 @@
+require 'pry'
+
 class Interval < ActiveRecord::Base
   belongs_to :user
   attr_accessible :start, :stop, :user
@@ -13,6 +15,10 @@ class Interval < ActiveRecord::Base
 
   def self.all_intervals_from_today(user)
     Interval.all_intervals_in_range(Date.today..Date.today + 1,user)
+  end
+
+  def self.one_interval_today?(user)
+    Interval.all_intervals_in_range(Date.today..Date.today + 1,user).count == 1
   end
 
   def self.all_intervals(user)
@@ -87,9 +93,9 @@ class Interval < ActiveRecord::Base
   end
 
   def calculate_new_overtime_for_today
-    intervals = Interval.all_intervals_from_today(self.user)
-    if intervals.empty?
-      self.diff - self.user.worktime + self.user.overtime
+    if Interval.one_interval_today?(self.user)
+      #debugger # erst start und dann stop
+      self.diff + self.user.overtime - self.user.worktime
     else
       self.diff + self.user.overtime
     end

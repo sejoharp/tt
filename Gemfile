@@ -25,6 +25,7 @@ gem "jquery-ui-rails"
 gem 'twitter-bootstrap-rails'
 
 group :development, :test do
+  gem 'pry'
   gem 'rspec-rails'
   gem 'capybara'
   gem 'database_cleaner'
