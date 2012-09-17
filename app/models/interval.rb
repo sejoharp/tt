@@ -1,5 +1,3 @@
-require 'pry'
-
 class Interval < ActiveRecord::Base
   belongs_to :user
   attr_accessible :start, :stop, :user
@@ -94,7 +92,6 @@ class Interval < ActiveRecord::Base
 
   def calculate_new_overtime_for_today
     if Interval.one_interval_today?(self.user)
-      #debugger # erst start und dann stop
       self.diff + self.user.overtime - self.user.worktime
     else
       self.diff + self.user.overtime
