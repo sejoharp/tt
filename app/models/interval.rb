@@ -4,7 +4,8 @@ class Interval < ActiveRecord::Base
   validates_presence_of :user
   validates_presence_of :start
   validate :stop_has_to_be_greater_than_or_equal_to_start, :if => 'not stop.nil?'
-  before_save :set_overtime_before_update, :if => 'not stop.nil? and valid?'
+  before_save :set_overtime_before_update, :if => 'user_ever_worked? and not stop.nil? and valid?'
+  before_save :set_new_overtime_for_last_day, :if => 'user_ever_worked? and stop.nil? and valid? and first_interval_on_new_day?'
   after_destroy :set_overtime_after_destroy, :if => 'not stop.nil?'
 
   def self.all_intervals_in_range(range,user)
@@ -90,27 +91,44 @@ class Interval < ActiveRecord::Base
     end
   end
 
-  def calculate_new_overtime_for_today
-    if Interval.one_interval_today?(self.user)
-      self.diff + self.user.overtime - self.user.worktime
-    else
-      self.diff + self.user.overtime
-    end
-  end
-
   def set_overtime_before_update
-    if self.start.today?
-      self.user.overtime = self.calculate_new_overtime_for_today
-    elsif self.id
-      self.user.overtime = self.calculate_new_overtime_for_altered_old_interval
-    else
-      self.user.overtime = self.calculate_new_overtime_for_new_old_interval
+    if not self.start.today?
+      if self.id
+        self.user.overtime = self.calculate_new_overtime_for_altered_old_interval
+      else
+        self.user.overtime = self.calculate_new_overtime_for_new_old_interval
+      end
     end
     self.user.save
   end
 
   def set_overtime_after_destroy
     self.user.overtime -= self.diff
+    self.user.save
+  end
+
+  def user_ever_worked?
+    value = Interval.where(:user_id=>self.user).count > 0
+    value
+  end
+
+  def self.get_last_day_from_user(user)
+    Interval.where(:user_id=>user).last.start
+  end
+
+  def first_interval_on_new_day?
+      Interval.get_last_day_from_user(self.user).today? == false
+  end
+
+  def self.get_intervals_from_last_day(user)
+    last_day = Interval.get_last_day_from_user(user)
+    Interval.all_intervals_in_range(last_day..last_day + 1,user)
+  end
+
+  def set_new_overtime_for_last_day
+    intervals_from_last_day = Interval.get_intervals_from_last_day(self.user)
+    worked_time = Interval.sum_diffs intervals_from_last_day
+    self.user.overtime = worked_time + self.user.overtime - self.user.worktime
     self.user.save
   end
 end
