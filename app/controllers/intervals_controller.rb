@@ -106,6 +106,7 @@ class IntervalsController < ApplicationController
   def start
     respond_to do |format|
       if not Interval.open?(current_user) and Interval.start_interval(current_user)
+        refresh_overtime
         format.html { redirect_to today_intervals_url, notice: 'started working.' }
         format.json { head :no_content }
       else
@@ -118,7 +119,6 @@ class IntervalsController < ApplicationController
   def stop
     respond_to do |format|
       if Interval.stop_interval(current_user)
-        refresh_overtime
         format.html { redirect_to today_intervals_url, notice: 'stopped working.' }
         format.json { head :no_content }
       else

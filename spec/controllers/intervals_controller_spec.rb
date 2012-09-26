@@ -62,6 +62,26 @@ describe IntervalsController do
       assigns(:finishing_time).hour.should eq finishing_time_expected.hour
       assigns(:finishing_time).min.should eq finishing_time_expected.min
     end
+    it "thriduser worked 1 h too much so there is 1 h overtime" do
+      user = users(:thriduser)
+      start = DateTime.new(2012,7,1,8,0)
+      stop = DateTime.new(2012,7,1,16,48)
+      Interval.create!(:start => start, :stop =>stop,:user=> user)
+      post :start, {}, {:user_id =>users(:thriduser).id}
+      get :today, {}, {:user_id =>users(:thriduser).id}
+      assigns(:overtime).should eq 3600
+    end
+    it "thriduser worked 1 h too much so there is 0 h overtime because of negative previous overtime" do
+      user = users(:thriduser)
+      user.overtime = -3600
+      user.save
+      start = DateTime.new(2012,7,1,8,0)
+      stop = DateTime.new(2012,7,1,16,48)
+      Interval.create!(:start => start, :stop =>stop,:user=> user)
+      post :start, {}, {:user_id =>users(:thriduser).id}
+      get :today, {}, {:user_id =>users(:thriduser).id}
+      assigns(:overtime).should eq 0
+    end
   end
 
   describe "GET show" do
