@@ -181,4 +181,14 @@ describe Interval do
     interval = Interval.new(:start => DateTime.now, :stop =>nil,:user=> user)
     interval.first_interval_on_new_day?.should eq true
   end
+  it '-3h 48mins overtime + 7h 44h worktime = -3h 52mins overtime' do
+    user = users(:fourthuser)
+    user.overtime = -13680
+    Interval.create!(:start => DateTime.now, :stop =>nil,:user=> user)
+    user.overtime.should eq -16560
+  end
+  it 'get_intervals_from_last_day returns 3 for fourthuser' do
+    user = users(:fourthuser)
+    Interval.get_intervals_from_last_day(user).size.should eq 3
+  end
 end

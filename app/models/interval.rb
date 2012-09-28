@@ -113,7 +113,7 @@ class Interval < ActiveRecord::Base
   end
 
   def self.get_last_day_from_user(user)
-    Interval.where(:user_id=>user).last.start
+    Interval.where(:user_id=>user).last.start.to_date
   end
 
   def first_interval_on_new_day?

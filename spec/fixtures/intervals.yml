@@ -20,10 +20,15 @@ four:
 
 five:
   user: fourthuser
-  start: <%= 4.hour.ago %>
-  stop: <%= 1.hour.ago %>
+  start: <%= DateTime.new(2012,9,26,10,30) %>
+  stop: <%= DateTime.new(2012,9,26,12,30) %>
 
 six:
   user: fourthuser
-  start: <%= 4.hour.ago %>
-  stop: <%= 1.hour.ago %>
+  start: <%= DateTime.new(2012,9,26,8,0) %>
+  stop: <%= DateTime.new(2012,9,26,10,0) %>
+
+seven:
+  user: fourthuser
+  start: <%= DateTime.new(2012,9,26,13,0) %>
+  stop: <%= DateTime.new(2012,9,26,16,0) %>
