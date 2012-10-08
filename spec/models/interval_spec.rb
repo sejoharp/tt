@@ -146,12 +146,10 @@ describe Interval do
     intervals.each {|interval| interval.start.today?.should eq true }
   end
   it 'overtime gets updated if user deletes an interval' do
-		user = users(:thriduser)
-    start = DateTime.now
-    Interval.create!(:start => start, :stop => start + (28078/86400.0) , :user=> user)
-    interval = Interval.create(:start => start, :stop => start + (2/86400.0) , :user=> user)
+		user = users(:fourthuser)
+		interval = intervals(:six)
     interval.destroy
-    User.find(user.id).overtime.should eq -2
+    User.find(user.id).overtime.should eq 1920 - 7200
   end
   it 'one_interval_today returns true if one interval is there for today' do
     Interval.one_interval_today?(users(:seconduser)).should eq true

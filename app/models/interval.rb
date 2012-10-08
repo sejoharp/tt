@@ -8,7 +8,7 @@ class Interval < ActiveRecord::Base
   after_destroy :set_overtime_after_destroy
 
   def self.all_intervals_in_range(range,user)
-  	Interval.where(:start => range, :user_id=>user).order(:start)
+    Interval.where(:start => range, :user_id=>user).order(:start)
   end
 
   def self.all_intervals_from_today(user)
@@ -20,7 +20,7 @@ class Interval < ActiveRecord::Base
   end
 
   def self.all_intervals(user)
-  	Interval.where(:user_id=>user).order(:start)
+    Interval.where(:user_id=>user).order(:start)
   end
 
   def self.start_interval(user)
@@ -50,11 +50,11 @@ class Interval < ActiveRecord::Base
   end
 
   def diff
-  	if stop
-  		stop.to_f - start.to_f
-  	else
-  		DateTime.now.to_f - start.to_f
-  	end
+    if stop
+      stop.to_f - start.to_f
+    else
+      DateTime.now.to_f - start.to_f
+    end
   end
   def access_allowed?(user)
     self.user == user
@@ -132,14 +132,14 @@ class Interval < ActiveRecord::Base
   end
 
   def overtime_update?
-    not self.stop.nil? and self.valid? and self.user_ever_worked?
+    self.valid? and self.user_ever_worked?
   end
 
   def update_overtime
     if self.overtime_update?
-      if self.first_interval_on_new_day?
+      if self.stop.nil? and self.first_interval_on_new_day?
         self.set_new_overtime_for_last_day
-      elsif not self.start.today?
+      elsif not self.stop.nil? and not self.start.today?
         self.set_overtime_before_update
       end
     end
