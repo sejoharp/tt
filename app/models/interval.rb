@@ -121,28 +121,15 @@ class Interval < ActiveRecord::Base
   def self.recalculate_overtime(user)
     intervals = Interval.all_intervals_in_past(user)
     if not intervals.empty?
-      current_day_intervals = Array.new
-      day_count = 0
-      workedtime_sum = 0
+      day_count = 1
       start = intervals.first.start.to_date
       intervals.each do |interval|
-        if interval.start.to_date == start
-          current_day_intervals.push interval
-        else
-          if not current_day_intervals.empty?
-            workedtime_sum += Interval.sum_diffs(current_day_intervals)
-          end
-          day_count += day_count + 1
-          current_day_intervals = Array.new
-          current_day_intervals.push interval
+        if interval.start.to_date != start
+          day_count += 1
           start = interval.start.to_date
         end
       end
-      if not current_day_intervals.empty? and workedtime_sum == 0
-        workedtime_sum = Interval.sum_diffs(current_day_intervals)
-        day_count = 1
-      end
-      workedtime_sum - user.worktime * day_count
+      Interval.sum_diffs(intervals) - user.worktime * day_count
     else
       0
     end
