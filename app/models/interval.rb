@@ -5,7 +5,13 @@ class Interval < ActiveRecord::Base
   validates_presence_of :start
   validate :stop_has_to_be_greater_than_or_equal_to_start, :if => 'not stop.nil?'
   before_save :update_overtime
-  after_destroy :set_overtime_after_destroy
+  after_destroy :set_overtime
+
+  def self.all_intervals_in_past(user)
+    start_date = Interval.all_intervals(user).first.start
+    end_date = Date.today
+    Interval.all_intervals_in_range(start_date..end_date, user)
+  end
 
   def self.all_intervals_in_range(range,user)
     Interval.where(:start => range, :user_id=>user).order(:start)
@@ -72,34 +78,8 @@ class Interval < ActiveRecord::Base
     sum
   end
 
-  def calculate_new_overtime_for_altered_old_interval
-      intervals = Interval.all_intervals_in_range(self.start..self.start + 1, self.user)
-      interval_old = Interval.find(self.id)
-      worktime_old = Interval.sum_diffs(intervals)
-      worktime_new = worktime_old - interval_old.diff + self.diff
-      worktime_diff = worktime_new - worktime_old
-      self.user.overtime + worktime_diff
-  end
-
-  def calculate_new_overtime_for_new_old_interval
-    intervals = Interval.all_intervals_in_range(self.start..self.start + 1, self.user)
-    if intervals.empty?
-      self.diff - self.user.worktime + self.user.overtime
-    else
-      self.diff + self.user.overtime
-    end
-  end
-
-  def set_overtime_after_destroy
-    if not self.start.today? and not self.stop.nil?
-      self.user.overtime -= self.diff
-      self.user.save
-    end
-  end
-
   def user_ever_worked?
-    value = Interval.where(:user_id=>self.user).count > 0
-    value
+    Interval.where(:user_id=>self.user).count > 0
   end
 
   def self.get_last_day_from_user(user)
@@ -115,22 +95,6 @@ class Interval < ActiveRecord::Base
     Interval.all_intervals_in_range(last_day..last_day + 1,user)
   end
 
-  def set_overtime_before_update
-      if self.id
-        self.user.overtime = self.calculate_new_overtime_for_altered_old_interval
-      else
-        self.user.overtime = self.calculate_new_overtime_for_new_old_interval
-      end
-      self.user.save
-  end
-
-  def set_new_overtime_for_last_day
-      intervals_from_last_day = Interval.get_intervals_from_last_day(self.user)
-      worked_time = Interval.sum_diffs intervals_from_last_day
-      self.user.overtime = worked_time + self.user.overtime - self.user.worktime
-      self.user.save
-  end
-
   def overtime_update?
     self.valid? and self.user_ever_worked?
   end
@@ -138,10 +102,49 @@ class Interval < ActiveRecord::Base
   def update_overtime
     if self.overtime_update?
       if self.stop.nil? and self.first_interval_on_new_day?
-        self.set_new_overtime_for_last_day
-      elsif not self.stop.nil? and not self.start.today?
-        self.set_overtime_before_update
+        Interval.save_new_overtime(self.user)
       end
+    end
+  end
+
+  def set_overtime
+    Interval.save_new_overtime(self.user)
+  end
+
+  def self.save_new_overtime(user)
+    if Interval.where(:user_id=>user).count > 0
+      user.overtime = Interval.recalculate_overtime(user)
+      user.save
+    end
+  end
+
+  def self.recalculate_overtime(user)
+    intervals = Interval.all_intervals_in_past(user)
+    if not intervals.empty?
+      current_day_intervals = Array.new
+      day_count = 0
+      workedtime_sum = 0
+      start = intervals.first.start.to_date
+      intervals.each do |interval|
+        if interval.start.to_date == start
+          current_day_intervals.push interval
+        else
+          if not current_day_intervals.empty?
+            workedtime_sum += Interval.sum_diffs(current_day_intervals)
+          end
+          day_count += day_count + 1
+          current_day_intervals = Array.new
+          current_day_intervals.push interval
+          start = interval.start.to_date
+        end
+      end
+      if not current_day_intervals.empty? and workedtime_sum == 0
+        workedtime_sum = Interval.sum_diffs(current_day_intervals)
+        day_count = 1
+      end
+      workedtime_sum - user.worktime * day_count
+    else
+      0
     end
   end
 end

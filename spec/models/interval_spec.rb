@@ -97,26 +97,6 @@ describe Interval do
 	it 'diff from an 0 intervals equals 0 secs' do
 		Interval.sum_diffs([]).should eq 0
 	end
-  it 'when working 1 sec more than worktime overtime is 1 sec' do
-    start = DateTime.new(2012,7,1,8)
-    stop = start + (28081/86400.0)
-    interval = Interval.new(:start => start, :stop => stop , :user=> users(:seconduser))
-    interval.calculate_new_overtime_for_new_old_interval.should eq -24479
-  end
-  it 'when changing an interval in the past overtime gets updated' do
-    start = DateTime.new(2012,7,1,8)
-    stop = start + (28081/86400.0)
-    Interval.create!(:start => start, :stop => stop , :user=> users(:seconduser))
-    User.find(users(:seconduser).id).overtime.should eq -24479
-  end
-  it 'when changing an interval in the past overtime gets updated' do
-  	user = users(:seconduser)
-    start = DateTime.new(2012,7,1,8)
-    stop = start + (28081/86400.0)
-    Interval.create!(:start => start, :stop => stop , :user=> user)
-    Interval.create!(:start => start, :stop => start + (1/86400.0), :user=> user)
-    User.find(users(:seconduser).id).overtime.should eq -24478
-  end
   it 'when changing an interval from today overtime will not be updated' do
     start = DateTime.now
     stop = start + (24479/86400.0)
@@ -124,17 +104,6 @@ describe Interval do
     interval.stop = stop
     interval.save
     User.find(users(:seconduser).id).overtime.should eq interval.user.overtime
-  end
-  it 'when altering an old interval overtime gets updated' do
-  	intervals(:one).update_attribute(:stop, DateTime.new(2000,1,1,8) + (28081/86400.0))
-  	User.find(users(:testuser).id).overtime.should eq -28078
-  end
-  it 'when altering an old interval overtime is 7200' do
-  	start = DateTime.new(2012,7,1,8)
-  	stop = start + (28080/86400.0)
-  	interval = Interval.create(:start => start, :stop => stop , :user=> users(:seconduser))
-  	interval.stop = stop + (1/86400.0)
-  	interval.calculate_new_overtime_for_altered_old_interval.should eq -24479
   end
   it 'User works three in three intervals today' do
 		user = users(:testuser)
@@ -149,24 +118,13 @@ describe Interval do
 		user = users(:fourthuser)
 		interval = intervals(:six)
     interval.destroy
-    User.find(user.id).overtime.should eq 1920 - 7200
+    User.find(user.id).overtime.should eq -2880 - 7200
   end
   it 'one_interval_today returns true if one interval is there for today' do
     Interval.one_interval_today?(users(:seconduser)).should eq true
   end
   it 'one_interval_today returns false if no interval is there for today' do
     Interval.one_interval_today?(users(:thriduser)).should eq false
-  end
-  it 'changes on closed intervals from last day effects overtime on the first start from today' do
-    user = users(:thriduser)
-    user.overtime = -3600
-    start = DateTime.new(2012,7,1,8)
-    stop = DateTime.new(2012,7,1,11)
-
-    Interval.create!(:start => start, :stop =>stop,:user=> user)
-
-    interval = Interval.create(:start => DateTime.now, :stop =>nil,:user=> user)
-    user.overtime.should eq (3 * 3600 - user.worktime - 3600)
   end
   it 'if user worked one time in the past get_last_day_from_user returns one interval' do
     user = users(:thriduser)
@@ -179,14 +137,28 @@ describe Interval do
     interval = Interval.new(:start => DateTime.now, :stop =>nil,:user=> user)
     interval.first_interval_on_new_day?.should eq true
   end
-  it '-3h 48mins overtime + 7h worktime = -4h 36mins overtime' do
-    user = users(:fourthuser)
-    user.overtime = -13680
-    Interval.create!(:start => DateTime.now, :stop =>nil,:user=> user)
-    user.overtime.should eq -16560
-  end
   it 'get_intervals_from_last_day returns 3 for fourthuser' do
     user = users(:fourthuser)
     Interval.get_intervals_from_last_day(user).size.should eq 3
+  end
+  it 'all_intervals_in_past returns 2 intervals for testuser' do
+		user = users(:testuser)
+    intervals = Interval.all_intervals_in_past(user)
+    intervals.size.should eq 2
+  end
+  it 'recalculate_overtime for testuser' do
+		user = users(:testuser)
+    calculated_overtime = Interval.recalculate_overtime(user)
+    calculated_overtime.should eq user.overtime
+  end
+  it 'recalculate_overtime for fourthuser' do
+		user = users(:fourthuser)
+    calculated_overtime = Interval.recalculate_overtime(user)
+    calculated_overtime.should eq user.overtime
+  end
+  it 'recalculate_overtime for secondhuser' do
+		user = users(:seconduser)
+    calculated_overtime = Interval.recalculate_overtime(user)
+    calculated_overtime.should eq user.overtime
   end
 end

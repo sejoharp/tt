@@ -2,7 +2,7 @@
 testuser:
   name: testuser
   worktime: 28080
-  overtime: -28079
+  overtime: 0
   password_hash: "$2a$10$fKXhFeWZ7zjPQxzKu6oshuBE4E5agpZGwYiwLw8.28.ZCTHOPgDy2"
   password_salt: "$2a$10$fKXhFeWZ7zjPQxzKu6oshu"
 
@@ -10,7 +10,7 @@ testuser:
 seconduser:
   name: seconduser
   worktime: 28080
-  overtime: -24480
+  overtime: 0
   password_hash: "$2a$10$SLwc/fHE3z172URD0uk38ekU13uq0tyO05eiqNxGtF6iQcCtS8l9y"
   password_salt: "$2a$10$SLwc/fHE3z172URD0uk38e"
 
@@ -26,6 +26,6 @@ thriduser:
 fourthuser:
   name: fourthuser
   worktime: 28080
-  overtime: 1920
+  overtime: -2880
   password_hash: "$2a$10$SLwc/fHE3z172URD0uk38ekU13uq0tyO05eiqNxGtF6iQcCtS8l9y"
   password_salt: "$2a$10$SLwc/fHE3z172URD0uk38e"  

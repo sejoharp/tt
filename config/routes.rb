@@ -62,6 +62,7 @@ Tt::Application.routes.draw do
   post 'intervals/start' => 'intervals#start', :as =>'start_interval'
   put 'intervals/stop' => 'intervals#stop', :as =>'stop_interval'
   get 'intervals/today' => 'intervals#today', :as =>'today_intervals'
+  post 'overtime' => 'intervals#recalculate_overtime', :as =>'recalculate_overtime'
   root :to => "intervals#today"
   resources :users
   resources :sessions

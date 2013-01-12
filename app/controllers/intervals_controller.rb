@@ -10,6 +10,14 @@ class IntervalsController < ApplicationController
     end
   end
 
+  def recalculate_overtime
+    Interval.save_new_overtime(current_user)
+    respond_to do |format|
+        format.html { redirect_to user_path(current_user), notice: 'overtime calculated'}
+        format.json { head :no_content }
+    end
+  end
+
   def today
     @intervals = Interval.all_intervals_from_today current_user
     @is_working = Interval.open? current_user

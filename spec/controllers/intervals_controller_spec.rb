@@ -36,9 +36,9 @@ describe IntervalsController do
       get :today, {}, valid_session
       assigns(:worktime).should eq 28080
     end
-    it "testuser has -28079 secs overtime" do
+    it "testuser has 0 secs overtime" do
       get :today, {}, valid_session
-      assigns(:overtime).should eq -28079
+      assigns(:overtime).should eq 0
     end
     it "testuser worked 3601 secs" do
       get :today, {}, valid_session
@@ -71,16 +71,14 @@ describe IntervalsController do
       get :today, {}, {:user_id =>users(:thriduser).id}
       assigns(:overtime).should eq 3600
     end
-    it "thriduser worked 1 h too much so there is 0 h overtime because of negative previous overtime" do
+    it "thriduser worked 1 h too much so there is 1 h overtime" do
       user = users(:thriduser)
-      user.overtime = -3600
-      user.save
       start = DateTime.new(2012,7,1,8,0)
       stop = DateTime.new(2012,7,1,16,48)
       Interval.create!(:start => start, :stop =>stop,:user=> user)
       post :start, {}, {:user_id =>users(:thriduser).id}
       get :today, {}, {:user_id =>users(:thriduser).id}
-      assigns(:overtime).should eq 0
+      assigns(:overtime).should eq 3600
     end
   end
 
