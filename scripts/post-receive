@@ -1,0 +1,5 @@
+#!/bin/zsh
+export HOME=/home/joscha
+source $HOME/.zshrc
+cd /opt/timetracker
+exec bundle exec thin start -p 61112 -e production 2>&1
