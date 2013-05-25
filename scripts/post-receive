@@ -1,5 +1,18 @@
 #!/bin/zsh
+
 export HOME=/home/joscha
+export project_dir=/home/joscha/opt/timetracker
+
 source $HOME/.zshrc
-cd /opt/timetracker
-exec bundle exec thin start -p 61112 -e production 2>&1
+
+echo "--> stopping timetracker ..."
+svc -u /home/joscha/service/timetracker
+
+echo "--> changing to project directory ..."
+cd ${project_dir}
+
+echo "--> checkout source ..."
+git checkout -f master
+
+echo "--> starting timetracker ..."
+svc -u /home/joscha/service/timetracker
