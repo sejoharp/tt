@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.11'
+gem 'rails', '3.2.13'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -29,18 +29,18 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'capybara'
   gem 'database_cleaner'
-  gem 'cucumber-rails', :require => false
-  gem "ZenTest", "~> 4.4.2"
-  gem "autotest-rails", "~> 4.1.0"
-  gem 'autotest-growl'
-  gem 'autotest-fsevent'
+#  gem 'cucumber-rails', :require => false
+#  gem "ZenTest", "~> 4.4.2"
+#  gem "autotest-rails", "~> 4.1.0"
+#  gem 'autotest-growl'
+#  gem 'autotest-fsevent'
   gem 'debugger'
   gem 'sqlite3'
 end
 
 group :production do
   gem 'thin'
-  gem 'pg'
+  gem 'mysql'
 end
 # To use ActiveModel has_secure_password
 gem 'bcrypt-ruby', :require => 'bcrypt'
