@@ -14,5 +14,8 @@ cd ${project_dir}
 echo "--> checkout source ..."
 git checkout -f master
 
+echo "--> updating dependencies ..."
+bundle update
+
 echo "--> starting timetracker ..."
 svc -u /home/joscha/service/timetracker

@@ -23,6 +23,8 @@ end
 gem 'jquery-rails'
 gem "jquery-ui-rails"
 gem 'twitter-bootstrap-rails'
+gem "less-rails"
+gem 'therubyracer'
 
 group :development, :test do
   gem 'pry'
@@ -40,7 +42,8 @@ end
 
 group :production do
   gem 'thin'
-  gem 'mysql'
+  gem 'mysql2'
+  gem 'activerecord-mysql2-adapter'
 end
 # To use ActiveModel has_secure_password
 gem 'bcrypt-ruby', :require => 'bcrypt'
