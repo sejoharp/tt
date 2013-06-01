@@ -56,15 +56,17 @@ Tt::Application.routes.draw do
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
-  get "logout" => "sessions#destroy", :as => "logout"
-  get "login" => "sessions#new", :as => "login"
-  get "signup" => "users#new", :as => "signup"
-  post 'intervals/start' => 'intervals#start', :as =>'start_interval'
-  put 'intervals/stop' => 'intervals#stop', :as =>'stop_interval'
-  get 'intervals/today' => 'intervals#today', :as =>'today_intervals'
-  post 'overtime' => 'intervals#recalculate_overtime', :as =>'recalculate_overtime'
-  root :to => "intervals#today"
-  resources :users
-  resources :sessions
-  resources :intervals  
+  scope 'tt' do
+    get "logout" => "sessions#destroy", :as => "logout"
+    get "login" => "sessions#new", :as => "login"
+    get "signup" => "users#new", :as => "signup"
+    post 'intervals/start' => 'intervals#start', :as =>'start_interval'
+    put 'intervals/stop' => 'intervals#stop', :as =>'stop_interval'
+    get 'intervals/today' => 'intervals#today', :as =>'today_intervals'
+    post 'overtime' => 'intervals#recalculate_overtime', :as =>'recalculate_overtime'
+    root :to => "intervals#today"
+    resources :users
+    resources :sessions
+    resources :intervals  
+  end
 end
