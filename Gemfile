@@ -43,7 +43,6 @@ end
 group :production do
   gem 'thin'
   gem 'mysql2'
-  gem 'activerecord-mysql2-adapter'
 end
 # To use ActiveModel has_secure_password
 gem 'bcrypt-ruby', :require => 'bcrypt'
